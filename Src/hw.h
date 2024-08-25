@@ -27,23 +27,20 @@
 
 #define ICON_NUM			8
 
-typedef enum {
-	BTN_STATE_RELEASED = 0,
-	BTN_STATE_PRESSED,
-} btn_state_t;
+//btn_state_t enum replacement
+#define BTN_STATE_RELEASED 0
+#define BTN_STATE_PRESSED 1
 
-typedef enum {
-	BTN_LEFT = 0,
-	BTN_MIDDLE,
-	BTN_RIGHT,
-} button_t;
-
+//button_t enum replacement
+#define BTN_LEFT 0
+#define BTN_MIDDLE 1
+#define BTN_RIGHT 2
 
 bool_t hw_init(void);
 void hw_release(void);
 
 void hw_set_lcd_pin(u8_t seg, u8_t com, u8_t val);
-void hw_set_button(button_t btn, btn_state_t state);
+void hw_set_button(int btn, int state);
 
 void hw_set_buzzer_freq(u4_t freq);
 void hw_enable_buzzer(bool_t en);

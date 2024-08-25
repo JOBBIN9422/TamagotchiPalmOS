@@ -26,12 +26,10 @@
 	#define NULL 0
 #endif
 
-typedef enum {
-	LOG_ERROR	= 0x1,
-	LOG_INFO	= (0x1 << 1),
-	LOG_MEMORY	= (0x1 << 2),
-	LOG_CPU		= (0x1 << 3),
-} log_level_t;
+#define LOG_ERROR 0x1
+#define LOG_INFO 0x10
+#define LOG_MEMORY 0x100
+#define LOG_CPU 0x1000
 
 /* The Hardware Abstraction Layer
  * NOTE: This structure acts as an abstraction layer between TamaLIB and the OS/SDK.
@@ -51,8 +49,8 @@ typedef struct {
 	/* Log related function
 	 * NOTE: Needed only if log messages are required.
 	 */
-	bool_t (*is_log_enabled)(log_level_t level);
-	void (*log)(log_level_t level, char *buff, ...);
+	bool_t (*is_log_enabled)(int level);
+	void (*log)(int level, char *buff, ...);
 
 	/* Clock related functions
 	 * NOTE: Timestamps granularity is configured with tamalib_init(), an accuracy

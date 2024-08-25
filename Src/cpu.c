@@ -163,27 +163,23 @@ static u8_t speed_ratio = 1;
 static timestamp_t ref_ts;
 
 static state_t cpu_state = {
-	.pc = &pc,
-	.x = &x,
-	.y = &y,
-	.a = &a,
-	.b = &b,
-	.np = &np,
-	.sp = &sp,
-	.flags = &flags,
-
-	.tick_counter = &tick_counter,
-	.clk_timer_timestamp = &clk_timer_timestamp,
-	.prog_timer_timestamp = &prog_timer_timestamp,
-	.prog_timer_enabled = &prog_timer_enabled,
-	.prog_timer_data = &prog_timer_data,
-	.prog_timer_rld = &prog_timer_rld,
-
-	.call_depth = &call_depth,
-
-	.interrupts = interrupts,
-
-	.memory = memory,
+	&pc,
+	&x,
+	&y,
+	&a,
+	&b,
+	&np,
+	&sp,
+	&flags,
+	&tick_counter,
+	&clk_timer_timestamp,
+	&prog_timer_timestamp,
+	&prog_timer_enabled,
+	&prog_timer_data,
+	&prog_timer_rld,
+	&call_depth,
+	interrupts,
+	memory,
 };
 
 
@@ -237,7 +233,7 @@ u32_t cpu_get_depth(void)
 	return call_depth;
 }
 
-static void generate_interrupt(int_slot_t slot, u8_t bit)
+static void generate_interrupt(int slot, u8_t bit)
 {
 	/* Set the factor flag no matter what */
 	interrupts[slot].factor_flag_reg = interrupts[slot].factor_flag_reg | (0x1 << bit);
@@ -248,7 +244,7 @@ static void generate_interrupt(int_slot_t slot, u8_t bit)
 	}
 }
 
-void cpu_set_input_pin(pin_t pin, pin_state_t state)
+void cpu_set_input_pin(int pin, int state)
 {
 	/* Set the I/O */
 	inputs[pin & 0x4].states = (inputs[pin & 0x4].states & ~(0x1 << (pin & 0x3))) | (state << (pin & 0x3));
@@ -607,6 +603,9 @@ static void set_memory(u12_t n, u4_t v)
 
 void cpu_refresh_hw(void)
 {
+	int i;
+	u12_t n;
+	
 	static const struct range {
 		u12_t addr;
 		u12_t size;
@@ -619,8 +618,8 @@ void cpu_refresh_hw(void)
 		{ 0, 0 }, // end of list
 	};
 
-	for (int i = 0; refresh_locs[i].size != 0; i++) {
-		for (u12_t n = refresh_locs[i].addr; n < (refresh_locs[i].addr + refresh_locs[i].size); n++) {
+	for (i = 0; refresh_locs[i].size != 0; i++) {
+		for (n = refresh_locs[i].addr; n < (refresh_locs[i].addr + refresh_locs[i].size); n++) {
 			set_memory(n, GET_MEMORY(memory, n));
 		}
 	}

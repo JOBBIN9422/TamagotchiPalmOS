@@ -36,14 +36,13 @@
 #define tamalib_add_bp(list, addr)			cpu_add_bp(list, addr)
 #define tamalib_free_bp(list)				cpu_free_bp(list)
 
-typedef enum {
-	EXEC_MODE_PAUSE,
-	EXEC_MODE_RUN,
-	EXEC_MODE_STEP,
-	EXEC_MODE_NEXT,
-	EXEC_MODE_TO_CALL,
-	EXEC_MODE_TO_RET,
-} exec_mode_t;
+//exec_mode_t enum replacement
+#define EXEC_MODE_PAUSE 0
+#define EXEC_MODE_RUN 1
+#define EXEC_MODE_STEP 2
+#define EXEC_MODE_NEXT 3
+#define EXEC_MODE_TO_CALL 4
+#define EXEC_MODE_TO_RET 5
 
 
 void tamalib_release(void);
@@ -54,7 +53,7 @@ u8_t tamalib_get_framerate(void);
 
 void tamalib_register_hal(hal_t *hal);
 
-void tamalib_set_exec_mode(exec_mode_t mode);
+void tamalib_set_exec_mode(int mode);
 
 /* NOTE: Only one of these two functions must be used in the main application
  * (tamalib_step() should be used only if tamalib_mainloop() does not fit the

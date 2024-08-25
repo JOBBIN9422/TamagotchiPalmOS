@@ -109,31 +109,28 @@ typedef struct breakpoint {
 } breakpoint_t;
 
 /* Pins (TODO: add other pins) */
-typedef enum {
-	PIN_K00 = 0x0,
-	PIN_K01 = 0x1,
-	PIN_K02 = 0x2,
-	PIN_K03 = 0x3,
-	PIN_K10 = 0X4,
-	PIN_K11 = 0X5,
-	PIN_K12 = 0X6,
-	PIN_K13 = 0X7,
-} pin_t;
+//pin_t enum replacement
+#define PIN_K00 0x0
+#define PIN_K01 0x1
+#define PIN_K02 0x2
+#define PIN_K03 0x3
+#define PIN_K10 0X4
+#define PIN_K11 0X5
+#define PIN_K12 0X6
+#define PIN_K13 0X7
 
-typedef enum {
-	PIN_STATE_LOW = 0,
-	PIN_STATE_HIGH = 1,
-} pin_state_t;
+//pin_state_t enum replacement
+#define PIN_STATE_LOW 0
+#define PIN_STATE_HIGH 1
 
-typedef enum {
-	INT_PROG_TIMER_SLOT = 0,
-	INT_SERIAL_SLOT = 1,
-	INT_K10_K13_SLOT = 2,
-	INT_K00_K03_SLOT = 3,
-	INT_STOPWATCH_SLOT = 4,
-	INT_CLOCK_TIMER_SLOT = 5,
-	INT_SLOT_NUM,
-} int_slot_t;
+//int_slot_t enum replacement
+#define INT_PROG_TIMER_SLOT 0
+#define INT_SERIAL_SLOT 1
+#define INT_K10_K13_SLOT 2
+#define INT_K00_K03_SLOT 3
+#define INT_STOPWATCH_SLOT 4
+#define INT_CLOCK_TIMER_SLOT 5
+#define INT_SLOT_NUM 6
 
 typedef struct {
 	u4_t factor_flag_reg;
@@ -176,7 +173,7 @@ state_t * cpu_get_state(void);
 
 u32_t cpu_get_depth(void);
 
-void cpu_set_input_pin(pin_t pin, pin_state_t state);
+void cpu_set_input_pin(int pin, int state);
 
 void cpu_sync_ref_timestamp(void);
 

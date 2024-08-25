@@ -63,9 +63,9 @@ void hw_set_lcd_pin(u8_t seg, u8_t com, u8_t val)
 	}
 }
 
-void hw_set_button(button_t btn, btn_state_t state)
+void hw_set_button(int btn, int state)
 {
-	pin_state_t pin_state = (state == BTN_STATE_PRESSED) ? PIN_STATE_LOW : PIN_STATE_HIGH;
+	int pin_state = (state == BTN_STATE_PRESSED) ? PIN_STATE_LOW : PIN_STATE_HIGH;
 
 	switch (btn) {
 		case BTN_LEFT:

@@ -24,7 +24,7 @@
 
 #define DEFAULT_FRAMERATE				30 // fps
 
-static exec_mode_t exec_mode = EXEC_MODE_RUN;
+static int exec_mode = EXEC_MODE_RUN;
 
 static u32_t step_depth = 0;
 
@@ -70,7 +70,7 @@ void tamalib_register_hal(hal_t *hal)
 	g_hal = hal;
 }
 
-void tamalib_set_exec_mode(exec_mode_t mode)
+void tamalib_set_exec_mode(int mode)
 {
 	exec_mode = mode;
 	step_depth = cpu_get_depth();

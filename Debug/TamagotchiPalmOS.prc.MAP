@@ -1,0 +1,114 @@
+File:    1	"__RuntimeModule__"
+File:    2	"C:\Program Files (x86)\Metrowerks\CodeWarrior\Palm OS Support\CodeWarrior Libraries\Runtime\PalmOSRuntime_2i_A4A5.lib"
+File:    3	"CPlusLib68K.cp"
+File:    4	"Exception68K.cp"
+File:    5	"LongLong68K.c"
+File:    6	"MWRTTI.cp"
+File:    7	"NMWException.cp"
+File:    8	"NewMore.cp"
+File:    9	"New.cp"
+File:   10	"PalmOS_AbortExit.cpp"
+File:   11	"PalmOS_GlobalDestructors.c"
+File:   12	"PalmOS_setjmp.c"
+File:   13	"PalmOS_Startup.cpp"
+File:   14	"CWCallbackThunks.cpp"
+File:   15	"CWRuntime.c"
+File:   16	"C:\Program Files (x86)\Metrowerks\CodeWarrior\CW for Palm OS Support\MSL\MSL_C++\MSL_Palm_OS\Lib\68K\MSL_C++_PalmOS_2i_DbgA4A5.lib"
+File:   17	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\ios.cpp"
+File:   18	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\iostream.cpp"
+File:   19	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\MSLstring.cpp"
+File:   20	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\mutex.cpp"
+File:   21	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\strstream.cpp"
+File:   22	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C++\MSL_Common\Src\complex.cpp"
+File:   23	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\float.c"
+File:   24	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\errno.c"
+File:   25	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\string.c"
+File:   26	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\qsort.c"
+File:   27	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\arith.c"
+File:   28	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\bsearch.c"
+File:   29	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\rand.c"
+File:   30	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\ctype.c"
+File:   31	"\\engserv\cdserver\Product_Layouts\PalmOS\Version 9.0\Win Layout\CW for Palm OS Support\MSL\MSL_C\MSL_Common\Src\locale.c"
+File:   32	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Rsc\TamagotchiPalmOS_Rsc.rcp"
+File:   33	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\TamagotchiPalmOS.c"
+File:   34	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\cpu.c"
+File:   35	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\hw.c"
+File:   36	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\tamalib.c"
+
+Segment:   1    3840 bytes  "Segment 1"
+Code: 000004      12 bytes  "__DummyStartup__"               File: "__RuntimeModule__"
+Code: 000010      12 bytes  "__dthandler__4MTWKFv"           File: "NMWException.cp"
+Code: 00001c      12 bytes  "__duhandler__4MTWKFv"
+Code: 000028      34 bytes  "terminate__3stdFv"
+Code: 00004a      40 bytes  "abort"                          File: "PalmOS_AbortExit.cpp"
+Code: 000072      42 bytes  "__destroy_global_chain"         File: "PalmOS_GlobalDestructors.c"
+Code: 00009c      14 bytes  "setjmp"                         File: "PalmOS_setjmp.c"
+Code: 0000aa      18 bytes  "longjmp"
+Code: 0000bc     162 bytes  "__Relocate____4MTWKFPScPScUl"   File: "PalmOS_Startup.cpp"
+Code: 00015e     206 bytes  "__Relocate_StorageHeap____4MTWKFPScPScPScUl"
+Code: 00022c     408 bytes  "__DecompressA4Data____4MTWKFPScPScPSc"
+Code: 0003c4     426 bytes  "__SetupA4ConstGlobals____4MTWKFbPPvPPv"
+Code: 00056e     568 bytes  "__Startup__"
+Code: 0007a6       8 bytes  "__PreInit__"
+Code: 0007ae       8 bytes  "__InitCode__"
+Code: 0007b6     376 bytes  "__LoadAndRelocate____4MTWKFUcP7_opaque"
+Code: 00092e      32 bytes  "__CWPrototypeEventThunk__4MTWKFv" File: "CWCallbackThunks.cpp"
+Code: 00094e      46 bytes  "_CW_GenerateEventThunk"
+Code: 00097c      40 bytes  "GetObjectPtr"                   File: "C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\TamagotchiPalmOS.c"
+Code: 0009a4     124 bytes  "MainFormInit"
+Code: 000a20     466 bytes  "MainFormDoCommand"
+Code: 000bf2     136 bytes  "MainFormHandleEvent"
+Code: 000c7a      74 bytes  "AppHandleEvent"
+Code: 000cc4      90 bytes  "AppEventLoop"
+Code: 000d1e      68 bytes  "AppStart"
+Code: 000d62      38 bytes  "AppStop"
+Code: 000d88     296 bytes  "RomVersionCompatible"
+Code: 000eb0      80 bytes  "PilotMain"
+
+Data section below A5:    294 bytes
+Data section above A5:     46 bytes
+
+Uninitialized near data
+Data:     -4       4 bytes  "__global_destructor_chain"
+Data:   -262     258 bytes  "g_prefs"
+Data:   -294      32 bytes  "MainFormHandleEventThunk"
+
+Initialized far data
+Data:     40       6 bytes  "@exceptioninfo@"
+
+Expanded Data section below A4:      0 bytes
+Expanded Data section above A4:    160 bytes
+
+Expanded initialized far A4 relative data
+Data:      0     160 bytes  "__segtable__"
+
+-----
+
+PRC DB Name:       TamagotchiPalmOS
+PRC DB Version:    1
+Type:              appl
+Creator:           JOBN
+Resource Count:    14
+Creation Time:     2024-08-25 @ 1737
+Modification Time: 2024-08-25 @ 1737
+Last Backup Time:  
+Attributes:         0x00000009
+                    dmHdrAttrResDB
+                    dmHdrAttrBackup
+
+1:   tAIN           Application Name String            1000 (0x03e8)     17
+[TamagotchiPalmOS]
+2:   tver           Application Version String         1000 (0x03e8)     4
+[1.0]
+3:   code           68K Object Code                    1 (0x0001)        3840
+4:   data           68K Global Data                    0 (0x0000)        49
+5:   data           68K Global Data                    1 (0x0001)        131
+6:   code           68K Object Code                    0 (0x0000)        24
+7:   MBAR           Menu Bar                           1001 (0x03e9)     285
+8:   MBAR           Menu Bar                           1005 (0x03ed)     191
+9:   Talt           Alert                              1007 (0x03ef)     98
+10:   tFRM           Form                               1008 (0x03f0)     198
+11:   tFRM           Form                               1011 (0x03f3)     326
+12:   tFRM           Form                               1016 (0x03f8)     286
+13:   tAIB           Application Icon                   1000 (0x03e8)     2360
+14:   tAIB           Application Icon                   1001 (0x03e9)     692
