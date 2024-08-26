@@ -35,7 +35,7 @@ File:   34	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\cpu.c"
 File:   35	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\hw.c"
 File:   36	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\tamalib.c"
 
-Segment:   1    3840 bytes  "Segment 1"
+Segment:   1    3854 bytes  "Segment 1"
 Code: 000004      12 bytes  "__DummyStartup__"               File: "__RuntimeModule__"
 Code: 000010      12 bytes  "__dthandler__4MTWKFv"           File: "NMWException.cp"
 Code: 00001c      12 bytes  "__duhandler__4MTWKFv"
@@ -57,13 +57,13 @@ Code: 00094e      46 bytes  "_CW_GenerateEventThunk"
 Code: 00097c      40 bytes  "GetObjectPtr"                   File: "C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\TamagotchiPalmOS.c"
 Code: 0009a4     124 bytes  "MainFormInit"
 Code: 000a20     466 bytes  "MainFormDoCommand"
-Code: 000bf2     136 bytes  "MainFormHandleEvent"
-Code: 000c7a      74 bytes  "AppHandleEvent"
-Code: 000cc4      90 bytes  "AppEventLoop"
-Code: 000d1e      68 bytes  "AppStart"
-Code: 000d62      38 bytes  "AppStop"
-Code: 000d88     296 bytes  "RomVersionCompatible"
-Code: 000eb0      80 bytes  "PilotMain"
+Code: 000bf2     150 bytes  "MainFormHandleEvent"
+Code: 000c88      74 bytes  "AppHandleEvent"
+Code: 000cd2      90 bytes  "AppEventLoop"
+Code: 000d2c      68 bytes  "AppStart"
+Code: 000d70      38 bytes  "AppStop"
+Code: 000d96     296 bytes  "RomVersionCompatible"
+Code: 000ebe      80 bytes  "PilotMain"
 
 Data section below A5:    294 bytes
 Data section above A5:     46 bytes
@@ -89,8 +89,8 @@ PRC DB Version:    1
 Type:              appl
 Creator:           JOBN
 Resource Count:    14
-Creation Time:     2024-08-25 @ 1737
-Modification Time: 2024-08-25 @ 1737
+Creation Time:     2024-08-26 @ 1608
+Modification Time: 2024-08-26 @ 1608
 Last Backup Time:  
 Attributes:         0x00000009
                     dmHdrAttrResDB
@@ -100,9 +100,9 @@ Attributes:         0x00000009
 [TamagotchiPalmOS]
 2:   tver           Application Version String         1000 (0x03e8)     4
 [1.0]
-3:   code           68K Object Code                    1 (0x0001)        3840
+3:   code           68K Object Code                    1 (0x0001)        3854
 4:   data           68K Global Data                    0 (0x0000)        49
-5:   data           68K Global Data                    1 (0x0001)        131
+5:   data           68K Global Data                    1 (0x0001)        132
 6:   code           68K Object Code                    0 (0x0000)        24
 7:   MBAR           Menu Bar                           1001 (0x03e9)     285
 8:   MBAR           Menu Bar                           1005 (0x03ed)     191

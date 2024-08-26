@@ -262,6 +262,7 @@ static Boolean MainFormHandleEvent(EventType * eventP)
 			frmP = FrmGetActiveForm();
 			FrmDrawForm(frmP);
 			MainFormInit(frmP);
+						
 			handled = true;
 			break;
             
@@ -289,6 +290,13 @@ static Boolean MainFormHandleEvent(EventType * eventP)
 
 			break;
 		}
+		
+		case penDownEvent:
+			//int screenX = eventP->screenX;
+			//int screenY = eventP->screenY;
+			WinDrawPixel(eventP->screenX, eventP->screenY);
+			handled = true;
+			break;
 	}
     
 	return handled;
