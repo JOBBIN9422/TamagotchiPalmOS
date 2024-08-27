@@ -67,4 +67,6 @@ static int hal_handler(void);
 static bool_t hal_is_log_enabled(int level);
 static void hal_log(int level, char *buff, ...);
 
+static Boolean AppHandleEvent(EventType * eventP);
+
 #endif /* TAMAGOTCHIPALMOS_H_ */

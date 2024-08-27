@@ -175,7 +175,22 @@ static void hal_play_frequency(bool_t en)
 
 static int hal_handler(void)
 {
-	return 0;
+	UInt16 error;
+	EventType event;
+	
+	EvtGetEvent(&event, evtNoWait);
+
+	if (! SysHandleEvent(&event))
+	{
+		if (! MenuHandleEvent(0, &event, &error))
+		{
+			if (! AppHandleEvent(&event))
+			{
+				FrmDispatchEvent(&event);
+			}
+		}
+	}
+	return event.eType == appStopEvent;
 }
 
 static bool_t hal_is_log_enabled(int level)
@@ -489,40 +504,18 @@ static Boolean AppHandleEvent(EventType * eventP)
 
 static void AppEventLoop(void)
 {
-	UInt16 error;
-	EventType event;
 	timestamp_t ts;
 
-	do 
-	{	
-		//tamalib_mainloop();
-		if (!hal_handler())
+	while (!hal_handler())
+	{
+		tamalib_step();
+		ts = hal_get_timestamp();
+		if (ts - screen_ts >= 1000000 / 30)
 		{
-			tamalib_step();
-			ts = hal_get_timestamp();
-			if (ts - screen_ts >= 1000000 / 30)
-			{
-				screen_ts = ts;
-				hal_update_screen();
-			}
+			screen_ts = ts;
+			hal_update_screen();
 		}
-		
-		
-		/* change timeout if you need periodic nilEvents */
-		//EvtGetEvent(&event, evtWaitForever);
-		EvtGetEvent(&event, evtNoWait);
-
-		if (! SysHandleEvent(&event))
-		{
-			if (! MenuHandleEvent(0, &event, &error))
-			{
-				if (! AppHandleEvent(&event))
-				{
-					FrmDispatchEvent(&event);
-				}
-			}
-		}
-	} while (event.eType != appStopEvent);
+	}
 }
 
 /*
