@@ -144,11 +144,13 @@ static void hal_update_screen(void)
 		{
 			if (matrix_buffer[y][x])
 			{
-				WinDrawPixel(x, y);
+				WinDrawPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
+
 			}
 			else
 			{
-				WinErasePixel(x, y);
+				WinErasePixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
+
 			}
 		}
 	}
@@ -220,10 +222,12 @@ static void * GetObjectPtr(UInt16 objectID)
 
 static void MainFormInit(FormType *frmP)
 {
+	/*
 	FieldType *field;
 	const char *wizardDescription;
 	UInt16 fieldIndex;
 
+	
 	fieldIndex = FrmGetObjectIndex(frmP, MainDescriptionField);
 	field = (FieldType *)FrmGetObjectPtr(frmP, fieldIndex);
 	FrmSetFocus(frmP, fieldIndex);
@@ -235,9 +239,9 @@ static void MainFormInit(FormType *frmP)
 		"Other SDKs:\n"
 		;
 				
-	/* dont stack FldInsert calls, since each one generates a
-	 * fldChangedEvent, and multiple uses can overflow the event queue */
-	FldInsert(field, wizardDescription, StrLen(wizardDescription));
+	//dont stack FldInsert calls, since each one generates a
+	//fldChangedEvent, and multiple uses can overflow the event queue 
+	FldInsert(field, wizardDescription, StrLen(wizardDescription));*/
 }
 
 /*
@@ -412,13 +416,6 @@ static Boolean MainFormHandleEvent(EventType * eventP)
 		{
 			if (eventP->data.ctlSelect.controlID == MainClearTextButton)
 			{
-				/* The "Clear" button was hit. Clear the contents of the field. */
-				FieldType * field = (FieldType*)GetObjectPtr(MainDescriptionField);
-				if (field)
-				{
-					FldDelete(field, 0, 0xFFFF);					
-					FldDrawField(field);
-				}
 				break;
 			}
 
@@ -494,7 +491,7 @@ static void AppEventLoop(void)
 {
 	UInt16 error;
 	EventType event;
-	//timestamp_t ts;
+	timestamp_t ts;
 
 	do 
 	{	
@@ -502,18 +499,18 @@ static void AppEventLoop(void)
 		if (!hal_handler())
 		{
 			tamalib_step();
-			hal_update_screen();
-			//ts = hal_get_timestamp();
-			/*if (ts - screen_ts >= 1000000 / 30)
+			ts = hal_get_timestamp();
+			if (ts - screen_ts >= 1000000 / 30)
 			{
 				screen_ts = ts;
 				hal_update_screen();
-			}*/
+			}
 		}
 		
 		
 		/* change timeout if you need periodic nilEvents */
-		EvtGetEvent(&event, evtWaitForever);
+		//EvtGetEvent(&event, evtWaitForever);
+		EvtGetEvent(&event, evtNoWait);
 
 		if (! SysHandleEvent(&event))
 		{

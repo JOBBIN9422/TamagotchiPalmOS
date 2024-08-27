@@ -1,14 +1,13 @@
 /* pilrc generated file.  Do not edit!*/
-#define PrefsOKButton 1021
-#define PrefsSetting2Field 1020
-#define PrefsSetting1Checkbox 1018
-#define PrefsCancelButton 1017
-#define PrefsForm 1016
-#define AboutVersionField 1015
-#define AboutOKButton 1012
-#define AboutForm 1011
-#define MainClearTextButton 1010
-#define MainDescriptionField 1009
+#define PrefsOKButton 1020
+#define PrefsSetting2Field 1019
+#define PrefsSetting1Checkbox 1017
+#define PrefsCancelButton 1016
+#define PrefsForm 1015
+#define AboutVersionField 1014
+#define AboutOKButton 1011
+#define AboutForm 1010
+#define MainClearTextButton 1009
 #define MainForm 1008
 #define RomIncompatibleAlert 1007
 #define EditOnlyMenuBar 1005

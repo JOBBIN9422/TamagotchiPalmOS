@@ -41,6 +41,12 @@ extern TamagotchiPalmOSPreferenceType g_prefs;
 #define appPrefID				0x00
 #define appPrefVersionNum		0x01
 
+#define LCD_OFFSET_X 64
+#define LCD_OFFSET_Y 72
+
+//#define LCD_OFFSET_X 32
+//#define LCD_OFFSET_Y 36
+
 /*********************************************************************
  * Functions
  *********************************************************************/
