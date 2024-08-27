@@ -1699,6 +1699,7 @@ void cpu_release(void)
 
 int cpu_step(void)
 {
+	//op_t op_struct;
 	u12_t op;
 	u8_t i;
 	breakpoint_t *bp = g_breakpoints;
@@ -1712,7 +1713,7 @@ int cpu_step(void)
 			break;
 		}
 	}
-
+	//op_struct = ops[i];
 	if (ops[i].log == NULL) {
 		g_hal->log(LOG_ERROR, "Unknown op-code 0x%X (pc = 0x%04X)\n", op, pc);
 		return 1;

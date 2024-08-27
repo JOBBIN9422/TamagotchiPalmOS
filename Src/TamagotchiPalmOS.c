@@ -14,6 +14,8 @@
 #include <PalmOSGlue.h>
 #include <CWCallbackThunks.h>
 #include <time.h>
+#include <cstdio>
+#include <stdio.h>
 
 #include "TamagotchiPalmOS.h"
 #include "TamagotchiPalmOS_Rsc.h"
@@ -105,14 +107,14 @@ static void hal_halt(void)
 
 static void hal_sleep_until(timestamp_t ts)
 {
-	timestamp_t start = hal_get_timestamp();
+	/*timestamp_t start = hal_get_timestamp();
 	int remaining = (int) (ts - start);
 	
 	while (remaining > 0)
 	{
 		timestamp_t elapsed = hal_get_timestamp() - start;
 		remaining = remaining - elapsed;
-	}
+	}*/
 }
 
 static timestamp_t hal_get_timestamp(void)
@@ -142,11 +144,11 @@ static void hal_update_screen(void)
 		{
 			if (matrix_buffer[y][x])
 			{
-				WinDrawPixel(y, x);
+				WinDrawPixel(x, y);
 			}
 			else
 			{
-				WinErasePixel(y, x);
+				WinErasePixel(x, y);
 			}
 		}
 	}
@@ -176,13 +178,10 @@ static int hal_handler(void)
 
 static bool_t hal_is_log_enabled(int level)
 {
-	return 1;
+	return 0;
 }
 
-static void hal_log(int level, char *buff, ...)
-{
-	buff;
-}
+static void hal_log(int level, char *buff, ...) {}
 
 /*
  * FUNCTION: GetObjectPtr
@@ -495,20 +494,23 @@ static void AppEventLoop(void)
 {
 	UInt16 error;
 	EventType event;
-	timestamp_t ts;
+	//timestamp_t ts;
 
 	do 
 	{	
+		//tamalib_mainloop();
 		if (!hal_handler())
 		{
 			tamalib_step();
-			ts = hal_get_timestamp();
-			if (ts - screen_ts >= 1000000 / 30)
+			hal_update_screen();
+			//ts = hal_get_timestamp();
+			/*if (ts - screen_ts >= 1000000 / 30)
 			{
 				screen_ts = ts;
 				hal_update_screen();
-			}
+			}*/
 		}
+		
 		
 		/* change timeout if you need periodic nilEvents */
 		EvtGetEvent(&event, evtWaitForever);
