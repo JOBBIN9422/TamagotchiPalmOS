@@ -13,9 +13,13 @@
 #include <PalmOS.h>
 #include <PalmOSGlue.h>
 #include <CWCallbackThunks.h>
+#include <time.h>
 
 #include "TamagotchiPalmOS.h"
 #include "TamagotchiPalmOS_Rsc.h"
+
+#include "rom_12bit.h"
+#include "tamalib.h"
 
 /*********************************************************************
  * Entry Points
@@ -35,6 +39,41 @@ TamagotchiPalmOSPreferenceType g_prefs;
 
 static _CW_EventHandlerThunk MainFormHandleEventThunk;
 
+//the ROM loaded into memory
+static u12_t* g_program = NULL;
+static u32_t g_program_size = 0;
+
+//screen buffer
+static bool_t matrix_buffer[LCD_HEIGHT][LCD_WIDTH] = {{0}};
+
+static timestamp_t screen_ts = 0;
+
+//icon buffer
+static bool_t icon_buffer[ICON_NUM] = {0};
+
+//audio
+static u32_t current_freq = 0; // in dHz
+static unsigned int sin_pos = 0;
+static bool_t is_audio_playing = 0;
+
+
+//HAL object
+
+static hal_t hal = {
+	NULL,
+	NULL,
+	&hal_halt,
+	&hal_is_log_enabled,
+	&hal_log,
+	&hal_sleep_until,
+	&hal_get_timestamp,
+	&hal_update_screen,
+	&hal_set_lcd_matrix,
+	&hal_set_lcd_icon,
+	&hal_set_frequency,
+	&hal_play_frequency,
+	&hal_handler,
+};
 
 
 /*********************************************************************
@@ -48,6 +87,102 @@ static _CW_EventHandlerThunk MainFormHandleEventThunk;
 /*********************************************************************
  * Internal Functions
  *********************************************************************/
+
+u12_t* program_load(u32_t* size)
+{
+	u12_t *program;
+	program = (u12_t*)g_program_b12;
+	
+	*size = sizeof(g_program_b12) / sizeof(g_program_b12[0]);
+	
+	return program;
+}
+
+static void hal_halt(void)
+{
+	AppStop();
+}
+
+static void hal_sleep_until(timestamp_t ts)
+{
+	timestamp_t start = hal_get_timestamp();
+	int remaining = (int) (ts - start);
+	
+	while (remaining > 0)
+	{
+		timestamp_t elapsed = hal_get_timestamp() - start;
+		remaining = remaining - elapsed;
+	}
+}
+
+static timestamp_t hal_get_timestamp(void)
+{
+	return clock() * 1000000 / CLOCKS_PER_SEC;
+}
+
+
+
+static void hal_set_lcd_icon(u8_t icon, bool_t val)
+{
+	icon_buffer[icon] = val;
+}
+
+static void hal_set_lcd_matrix(u8_t x, u8_t y, bool_t val)
+{
+	matrix_buffer[y][x] = val;
+}
+
+static void hal_update_screen(void)
+{
+	unsigned int y, x;
+	
+	for (y = 0; y < LCD_HEIGHT; y++)
+	{
+		for (x = 0; x < LCD_WIDTH; x++)
+		{
+			if (matrix_buffer[y][x])
+			{
+				WinDrawPixel(y, x);
+			}
+			else
+			{
+				WinErasePixel(y, x);
+			}
+		}
+	}
+}
+
+static void hal_set_frequency(u32_t freq)
+{
+	if (current_freq != freq)
+	{
+		current_freq = freq;
+		sin_pos = 0;
+	}
+}
+
+static void hal_play_frequency(bool_t en)
+{
+	if (is_audio_playing != en)
+	{
+		is_audio_playing = en;
+	}
+}
+
+static int hal_handler(void)
+{
+	return 0;
+}
+
+static bool_t hal_is_log_enabled(int level)
+{
+	return 1;
+}
+
+static void hal_log(int level, char *buff, ...)
+{
+	buff;
+}
 
 /*
  * FUNCTION: GetObjectPtr
@@ -262,7 +397,7 @@ static Boolean MainFormHandleEvent(EventType * eventP)
 			frmP = FrmGetActiveForm();
 			FrmDrawForm(frmP);
 			MainFormInit(frmP);
-						
+			
 			handled = true;
 			break;
             
@@ -360,9 +495,21 @@ static void AppEventLoop(void)
 {
 	UInt16 error;
 	EventType event;
+	timestamp_t ts;
 
 	do 
-	{
+	{	
+		if (!hal_handler())
+		{
+			tamalib_step();
+			ts = hal_get_timestamp();
+			if (ts - screen_ts >= 1000000 / 30)
+			{
+				screen_ts = ts;
+				hal_update_screen();
+			}
+		}
+		
 		/* change timeout if you need periodic nilEvents */
 		EvtGetEvent(&event, evtWaitForever);
 
@@ -506,6 +653,10 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 
 	error = RomVersionCompatible (ourMinVersion, launchFlags);
 	if (error) return (error);
+			
+	g_program = program_load(&g_program_size);	
+	tamalib_register_hal(&hal);
+	tamalib_init(g_program, NULL, 1000000);
 
 	switch (cmd)
 	{
