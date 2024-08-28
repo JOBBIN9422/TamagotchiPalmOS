@@ -44,7 +44,8 @@ static u12_t* g_program = NULL;
 static u32_t g_program_size = 0;
 
 //display
-static bool_t matrix_buffer[LCD_HEIGHT][LCD_WIDTH] = {{0}};
+static bool_t prev_buffer[LCD_HEIGHT][LCD_WIDTH] = {{0}};
+static bool_t curr_buffer[LCD_HEIGHT][LCD_WIDTH] = {{0}};
 static bool_t icon_buffer[ICON_NUM] = {0};
 static timestamp_t screen_ts = 0;
 //static PointType screen_top_left     = { LCD_OFFSET_X, LCD_OFFSET_Y };
@@ -141,15 +142,15 @@ static void hal_set_lcd_icon(u8_t icon, bool_t val)
 
 static void hal_set_lcd_matrix(u8_t x, u8_t y, bool_t val)
 {
-	//matrix_buffer[y][x] = val;
-	if (val)
+	curr_buffer[y][x] = val;
+	/*if (val)
 	{
 		WinDrawPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
 	}
 	else
 	{
 		WinErasePixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
-	}
+	}*/
 }
 
 static void clear_screen(void)
@@ -160,17 +161,23 @@ static void clear_screen(void)
 static void hal_update_screen(void)
 {
 	unsigned int y, x;
-	clear_screen();
+	//clear_screen();
 	for (y = 0; y < LCD_HEIGHT; y++)
 	{
 		for (x = 0; x < LCD_WIDTH; x++)
 		{
-			if (matrix_buffer[y][x])
+		if (curr_buffer[y][x] != prev_buffer[y][x])
+		{
+			WinInvertPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
+		}
+		prev_buffer[y][x] = curr_buffer[y][x];
+		
+			/*if (curr_buffer[y][x])
 			{
 				WinDrawPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
 
 			}
-			/*else
+			else
 			{
 				WinErasePixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
 
@@ -689,17 +696,17 @@ static Boolean AppHandleEvent(EventType * eventP)
 
 static void AppEventLoop(void)
 {
-	//timestamp_t ts;
+	timestamp_t ts;
 
 	while (!hal_handler())
 	{
 		tamalib_step();
-		/*ts = hal_get_timestamp();
+		ts = hal_get_timestamp();
 		if (ts - screen_ts >= CLOCK_FREQ / 30)
 		{
 			screen_ts = ts;
 			hal_update_screen();
-		}*/
+		}
 		poll_keys();
 	}
 }
