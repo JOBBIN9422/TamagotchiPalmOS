@@ -217,7 +217,7 @@ static int hal_handler(void)
 		return 0;
 	}
 
-	/*if (! SysHandleEvent(&event))
+	if (! SysHandleEvent(&event))
 	{
 		if (! MenuHandleEvent(0, &event, &error))
 		{
@@ -226,7 +226,7 @@ static int hal_handler(void)
 				FrmDispatchEvent(&event);
 			}
 		}
-	}*/
+	}
 	return event.eType == appStopEvent;
 }
 
