@@ -44,7 +44,7 @@ extern TamagotchiPalmOSPreferenceType g_prefs;
 #define LCD_OFFSET_X 64
 #define LCD_OFFSET_Y 72
 
-#define CLOCK_FREQ 1000000
+#define CLOCK_FREQ 1000
 
 //#define LCD_OFFSET_X 32
 //#define LCD_OFFSET_Y 36
@@ -71,6 +71,7 @@ static int hal_handler(void);
 static bool_t hal_is_log_enabled(int level);
 static void hal_log(int level, char *buff, ...);
 
+static void clear_screen(void);
 static void reset_buttons(void);
 static void poll_keys(void);
 

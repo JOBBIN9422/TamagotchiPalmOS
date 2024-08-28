@@ -47,6 +47,9 @@ static u32_t g_program_size = 0;
 static bool_t matrix_buffer[LCD_HEIGHT][LCD_WIDTH] = {{0}};
 static bool_t icon_buffer[ICON_NUM] = {0};
 static timestamp_t screen_ts = 0;
+//static PointType screen_top_left     = { LCD_OFFSET_X, LCD_OFFSET_Y };
+//static PointType screen_bottom_right = { LCD_OFFSET_X + 32, LCD_OFFSET_Y + 16 }; 
+static RectangleType screen_bounds = { { LCD_OFFSET_X, LCD_OFFSET_Y }, { 32, 16 } };
 
 //audio
 static u32_t current_freq = 0; // in dHz
@@ -112,13 +115,13 @@ static void hal_halt(void)
 
 static void hal_sleep_until(timestamp_t ts)
 {
-	/*Int32 elapsed;
+	/*long long elapsed;
 	timestamp_t start = hal_get_timestamp();
-	Int32 remaining = (Int32)(ts - start);
+	long long remaining = (long long)(ts - start);
 	
 	while (remaining > 0)
 	{
-		elapsed =  (Int32)(hal_get_timestamp() - start);
+		elapsed =  (long long)(hal_get_timestamp() - start);
 		remaining = remaining - elapsed;
 	}*/
 }
@@ -138,13 +141,26 @@ static void hal_set_lcd_icon(u8_t icon, bool_t val)
 
 static void hal_set_lcd_matrix(u8_t x, u8_t y, bool_t val)
 {
-	matrix_buffer[y][x] = val;
+	//matrix_buffer[y][x] = val;
+	if (val)
+	{
+		WinDrawPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
+	}
+	else
+	{
+		WinErasePixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
+	}
+}
+
+static void clear_screen(void)
+{
+	WinEraseRectangle(&screen_bounds, 0);
 }
 
 static void hal_update_screen(void)
 {
 	unsigned int y, x;
-	
+	clear_screen();
 	for (y = 0; y < LCD_HEIGHT; y++)
 	{
 		for (x = 0; x < LCD_WIDTH; x++)
@@ -154,11 +170,11 @@ static void hal_update_screen(void)
 				WinDrawPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
 
 			}
-			else
+			/*else
 			{
 				WinErasePixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
 
-			}
+			}*/
 		}
 	}
 }
@@ -201,7 +217,7 @@ static int hal_handler(void)
 		return 0;
 	}
 
-	if (! SysHandleEvent(&event))
+	/*if (! SysHandleEvent(&event))
 	{
 		if (! MenuHandleEvent(0, &event, &error))
 		{
@@ -210,7 +226,7 @@ static int hal_handler(void)
 				FrmDispatchEvent(&event);
 			}
 		}
-	}
+	}*/
 	return event.eType == appStopEvent;
 }
 
@@ -673,17 +689,17 @@ static Boolean AppHandleEvent(EventType * eventP)
 
 static void AppEventLoop(void)
 {
-	timestamp_t ts;
+	//timestamp_t ts;
 
 	while (!hal_handler())
 	{
 		tamalib_step();
-		ts = hal_get_timestamp();
+		/*ts = hal_get_timestamp();
 		if (ts - screen_ts >= CLOCK_FREQ / 30)
 		{
 			screen_ts = ts;
 			hal_update_screen();
-		}
+		}*/
 		poll_keys();
 	}
 }
@@ -819,6 +835,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 	g_program = program_load(&g_program_size);	
 	tamalib_register_hal(&hal);
 	tamalib_init(g_program, NULL, CLOCK_FREQ);
+	//tamalib_set_speed(0);
 
 	switch (cmd)
 	{
