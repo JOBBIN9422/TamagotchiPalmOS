@@ -14,8 +14,7 @@
 #include <PalmOSGlue.h>
 #include <CWCallbackThunks.h>
 #include <time.h>
-#include <cstdio>
-#include <stdio.h>
+#include <stdlib.h>
 
 #include "TamagotchiPalmOS.h"
 #include "TamagotchiPalmOS_Rsc.h"
@@ -38,20 +37,16 @@ TamagotchiPalmOSPreferenceType g_prefs;
 
 /* MainFormHandleEventThunk
  * holds event callback thunk for main form event handler */
-
 static _CW_EventHandlerThunk MainFormHandleEventThunk;
 
 //the ROM loaded into memory
 static u12_t* g_program = NULL;
 static u32_t g_program_size = 0;
 
-//screen buffer
+//display
 static bool_t matrix_buffer[LCD_HEIGHT][LCD_WIDTH] = {{0}};
-
-static timestamp_t screen_ts = 0;
-
-//icon buffer
 static bool_t icon_buffer[ICON_NUM] = {0};
+static timestamp_t screen_ts = 0;
 
 //audio
 static u32_t current_freq = 0; // in dHz
@@ -60,10 +55,9 @@ static bool_t is_audio_playing = 0;
 
 
 //HAL object
-
 static hal_t hal = {
-	NULL,
-	NULL,
+	&hal_malloc,
+	&hal_free,
 	&hal_halt,
 	&hal_is_log_enabled,
 	&hal_log,
@@ -100,6 +94,16 @@ u12_t* program_load(u32_t* size)
 	return program;
 }
 
+static void* hal_malloc(u32_t size)
+{
+	return malloc(size);
+}
+
+static void hal_free(void* ptr)
+{
+	free(ptr);
+}
+
 static void hal_halt(void)
 {
 	tamalib_set_exec_mode(EXEC_MODE_PAUSE);
@@ -108,19 +112,21 @@ static void hal_halt(void)
 
 static void hal_sleep_until(timestamp_t ts)
 {
+	/*Int32 elapsed;
 	timestamp_t start = hal_get_timestamp();
-	int remaining = (int) (ts - start);
+	Int32 remaining = (Int32)(ts - start);
 	
 	while (remaining > 0)
 	{
-		timestamp_t elapsed = hal_get_timestamp() - start;
+		elapsed =  (Int32)(hal_get_timestamp() - start);
 		remaining = remaining - elapsed;
-	}
+	}*/
 }
 
 static timestamp_t hal_get_timestamp(void)
 {
-	return clock() * 1000000 / CLOCKS_PER_SEC;
+	//return clock() / CLOCKS_PER_SEC * CLOCK_FREQ;
+	return TimGetTicks() / SysTicksPerSecond() * CLOCK_FREQ;
 }
 
 
@@ -673,7 +679,7 @@ static void AppEventLoop(void)
 	{
 		tamalib_step();
 		ts = hal_get_timestamp();
-		if (ts - screen_ts >= 1000000 / 30)
+		if (ts - screen_ts >= CLOCK_FREQ / 30)
 		{
 			screen_ts = ts;
 			hal_update_screen();
@@ -812,7 +818,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 			
 	g_program = program_load(&g_program_size);	
 	tamalib_register_hal(&hal);
-	tamalib_init(g_program, NULL, 1000000);
+	tamalib_init(g_program, NULL, CLOCK_FREQ);
 
 	switch (cmd)
 	{
@@ -828,7 +834,8 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 			FrmGotoForm(MainForm);
 			AppEventLoop();
 
-			AppStop();
+			//AppStop();
+			hal_halt();
 			break;
 	}
 

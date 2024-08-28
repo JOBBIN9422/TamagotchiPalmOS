@@ -44,6 +44,8 @@ extern TamagotchiPalmOSPreferenceType g_prefs;
 #define LCD_OFFSET_X 64
 #define LCD_OFFSET_Y 72
 
+#define CLOCK_FREQ 1000000
+
 //#define LCD_OFFSET_X 32
 //#define LCD_OFFSET_Y 36
 
@@ -55,6 +57,8 @@ static void AppStop(void);
 
 u12_t* program_load(u32_t* size);
 
+static void* hal_malloc(u32_t size);
+static void hal_free(void* ptr);
 static void hal_halt(void);
 static void hal_sleep_until(timestamp_t ts);
 static timestamp_t hal_get_timestamp(void);
