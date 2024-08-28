@@ -166,11 +166,11 @@ static void hal_update_screen(void)
 	{
 		for (x = 0; x < LCD_WIDTH; x++)
 		{
-		if (curr_buffer[y][x] != prev_buffer[y][x])
-		{
-			WinInvertPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
-		}
-		prev_buffer[y][x] = curr_buffer[y][x];
+			if (curr_buffer[y][x] != prev_buffer[y][x])
+			{
+				WinInvertPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
+			}
+			prev_buffer[y][x] = curr_buffer[y][x];
 		
 			/*if (curr_buffer[y][x])
 			{
