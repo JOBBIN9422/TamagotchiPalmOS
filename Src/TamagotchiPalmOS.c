@@ -102,19 +102,20 @@ u12_t* program_load(u32_t* size)
 
 static void hal_halt(void)
 {
+	tamalib_set_exec_mode(EXEC_MODE_PAUSE);
 	AppStop();
 }
 
 static void hal_sleep_until(timestamp_t ts)
 {
-	/*timestamp_t start = hal_get_timestamp();
+	timestamp_t start = hal_get_timestamp();
 	int remaining = (int) (ts - start);
 	
 	while (remaining > 0)
 	{
 		timestamp_t elapsed = hal_get_timestamp() - start;
 		remaining = remaining - elapsed;
-	}*/
+	}
 }
 
 static timestamp_t hal_get_timestamp(void)
@@ -179,6 +180,20 @@ static int hal_handler(void)
 	EventType event;
 	
 	EvtGetEvent(&event, evtNoWait);
+	
+	if (event.eType == nilEvent)
+	{
+		return 0;
+	}
+
+	if ((event.eType == keyDownEvent)
+	&& (TxtCharIsHardKey(event.data.keyDown.modifiers, event.data.keyDown.chr))
+	&& (event.data.keyDown.chr >= vchrHard1)
+	&& (event.data.keyDown.chr <= vchrHard4)
+	&& (!(event.data.keyDown.modifiers & poweredOnKeyMask)))
+	{
+		return 0;
+	}
 
 	if (! SysHandleEvent(&event))
 	{
@@ -199,6 +214,43 @@ static bool_t hal_is_log_enabled(int level)
 }
 
 static void hal_log(int level, char *buff, ...) {}
+
+static void reset_buttons(void)
+{
+	tamalib_set_button(BTN_LEFT, BTN_STATE_RELEASED);
+	tamalib_set_button(BTN_MIDDLE, BTN_STATE_RELEASED);
+	tamalib_set_button(BTN_RIGHT, BTN_STATE_RELEASED);
+}
+
+static void poll_keys(void)
+{
+	UInt32 keyState = KeyCurrentState();
+		
+	if (keyState & keyBitPageDown)
+	{
+		tamalib_set_button(BTN_MIDDLE, BTN_STATE_PRESSED);
+	}
+	else
+	{
+		tamalib_set_button(BTN_MIDDLE, BTN_STATE_RELEASED);
+	}
+	if (keyState & keyBitHard2)
+	{
+		tamalib_set_button(BTN_LEFT, BTN_STATE_PRESSED);
+	}
+	else
+	{
+		tamalib_set_button(BTN_LEFT, BTN_STATE_RELEASED);
+	}
+	if (keyState & keyBitHard3)
+	{
+		tamalib_set_button(BTN_RIGHT, BTN_STATE_PRESSED);
+	}
+	else
+	{
+		tamalib_set_button(BTN_RIGHT, BTN_STATE_RELEASED);
+	}
+}
 
 /*
  * FUNCTION: GetObjectPtr
@@ -403,6 +455,7 @@ static Boolean MainFormDoCommand(UInt16 command)
 
 static Boolean MainFormHandleEvent(EventType * eventP)
 {
+	//UInt32 keyState;
 	Boolean handled = false;
 	FormType * frmP;
 
@@ -426,23 +479,133 @@ static Boolean MainFormHandleEvent(EventType * eventP)
 			 * then set handled to true. 
 			 */
 			break;
+		
+		/*case nilEvent:
+			keyState = KeyCurrentState();
 			
-		case ctlSelectEvent:
-		{
-			if (eventP->data.ctlSelect.controlID == MainClearTextButton)
+			if (keyState & keyBitPageDown)
 			{
+				tamalib_set_button(BTN_MIDDLE, BTN_STATE_PRESSED);
+			}
+			else
+			{
+				tamalib_set_button(BTN_MIDDLE, BTN_STATE_RELEASED);
+			}
+			if (keyState & keyBitHard2)
+			{
+				tamalib_set_button(BTN_LEFT, BTN_STATE_PRESSED);
+			}
+			else
+			{
+				tamalib_set_button(BTN_LEFT, BTN_STATE_RELEASED);
+			}
+			if (keyState & keyBitHard3)
+			{
+				tamalib_set_button(BTN_RIGHT, BTN_STATE_PRESSED);
+			}
+			else
+			{
+				tamalib_set_button(BTN_RIGHT, BTN_STATE_RELEASED);
+			}
+			handled = true;
+			break;
+			
+		case ctlEnterEvent:
+		{
+			if (eventP->data.ctlEnter.controlID == LeftButton)
+			{
+				tamalib_set_button(BTN_LEFT, BTN_STATE_PRESSED);
+				//handled = true;
+				break;
+			}
+			if (eventP->data.ctlEnter.controlID == MiddleButton)
+			{
+				tamalib_set_button(BTN_MIDDLE, BTN_STATE_PRESSED);
+				//handled = true;
+				break;
+			}
+			if (eventP->data.ctlEnter.controlID == RightButton)
+			{
+				tamalib_set_button(BTN_RIGHT, BTN_STATE_PRESSED);
+				//handled = true;
 				break;
 			}
 
 			break;
 		}
 		
+		case ctlSelectEvent:
+		{
+			if (eventP->data.ctlSelect.controlID == LeftButton)
+			{
+				tamalib_set_button(BTN_LEFT, BTN_STATE_RELEASED);
+				handled = true;
+				break;
+			}
+			if (eventP->data.ctlSelect.controlID == MiddleButton)
+			{
+				tamalib_set_button(BTN_MIDDLE, BTN_STATE_RELEASED);
+				handled = true;
+				break;
+			}
+			if (eventP->data.ctlSelect.controlID == RightButton)
+			{
+				tamalib_set_button(BTN_RIGHT, BTN_STATE_RELEASED);
+				handled = true;
+				break;
+			}
+
+			break;
+		}
+		
+		case keyDownEvent:
+			switch (eventP->data.keyDown.chr)
+			{
+				case pageDownChr:
+					tamalib_set_button(BTN_MIDDLE, BTN_STATE_PRESSED);
+					handled = true;
+					break;
+				
+				case hard2Chr:
+					tamalib_set_button(BTN_LEFT, BTN_STATE_PRESSED);
+					handled = true;
+					break;
+					
+				case hard3Chr:
+					tamalib_set_button(BTN_RIGHT, BTN_STATE_PRESSED);
+					handled = true;
+					break;
+			}
+			break;
+			
+		case 0x4000:
+			switch (eventP->data.keyDown.chr)
+			{
+				case pageDownChr:
+					tamalib_set_button(BTN_MIDDLE, BTN_STATE_RELEASED);
+					handled = true;
+					break;
+				
+				case hard2Chr:
+					tamalib_set_button(BTN_LEFT, BTN_STATE_RELEASED);
+					handled = true;
+					break;
+					
+				case hard3Chr:
+					tamalib_set_button(BTN_RIGHT, BTN_STATE_RELEASED);
+					handled = true;
+					break;
+			}
+			break;*/
+		
+		/*
 		case penDownEvent:
 			//int screenX = eventP->screenX;
 			//int screenY = eventP->screenY;
 			WinDrawPixel(eventP->screenX, eventP->screenY);
 			handled = true;
 			break;
+			*/
 	}
     
 	return handled;
@@ -515,6 +678,7 @@ static void AppEventLoop(void)
 			screen_ts = ts;
 			hal_update_screen();
 		}
+		poll_keys();
 	}
 }
 
