@@ -120,24 +120,20 @@ static void hal_halt(void)
 
 static void hal_sleep_until(timestamp_t ts)
 {
-	/*long long elapsed;
-	timestamp_t start = hal_get_timestamp();
+	/*timestamp_t start = hal_get_timestamp();
 	long long remaining = (long long)(ts - start);
-	
-	while (remaining > 0)
+	if (remaining > 0)
 	{
-		elapsed =  (long long)(hal_get_timestamp() - start);
-		remaining = remaining - elapsed;
+		Int32 ticks_to_sleep = (Int32)((float)remaining * (float)SysTicksPerSecond() / (float)CLOCK_FREQ);
+		SysTaskDelay(ticks_to_sleep);
 	}*/
 }
 
 static timestamp_t hal_get_timestamp(void)
 {
 	//return clock() / CLOCKS_PER_SEC * CLOCK_FREQ;
-	//timestamp_t seconds = (timestamp_t)TimGetSeconds();
-	//timestamp_t ts = seconds * (timestamp_t)CLOCK_FREQ;
 	//return ts;
-	timestamp_t ts = (timestamp_t)((float)TimGetTicks() / (float)SysTicksPerSecond() * CLOCK_FREQ);
+	timestamp_t ts = (timestamp_t)((float)TimGetTicks() / (float)SysTicksPerSecond() * (float)CLOCK_FREQ);
 	return ts;
 	//return TimGetTicks() / SysTicksPerSecond() * CLOCK_FREQ;
 }
@@ -579,6 +575,12 @@ static Boolean AppHandleEvent(EventType * eventP)
 static void AppEventLoop(void)
 {
 	timestamp_t ts;
+	g_program = program_load(&g_program_size);	
+	tamalib_register_hal(&hal);
+	tamalib_init(g_program, NULL, (u32_t)CLOCK_FREQ);
+	//tamalib_set_speed(0);
+	//start_time = hal_get_timestamp();
+	
 
 	while (!hal_handler())
 	{
@@ -724,12 +726,6 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 
 	error = RomVersionCompatible (ourMinVersion, launchFlags);
 	if (error) return (error);
-			
-	g_program = program_load(&g_program_size);	
-	tamalib_register_hal(&hal);
-	tamalib_init(g_program, NULL, CLOCK_FREQ);
-	//tamalib_set_speed(0);
-	//start_time = hal_get_timestamp();
 
 	switch (cmd)
 	{
