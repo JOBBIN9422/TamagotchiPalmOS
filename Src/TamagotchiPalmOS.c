@@ -56,10 +56,10 @@ static unsigned int sin_pos = 0;
 static bool_t is_audio_playing = 0;
 
 //statistics
-//unsigned long long cpu_steps = 0;
-//unsigned long long frames_rendered = 0;
-//timestamp_t start_time = 0;
-//timestamp_t runtime = 0;
+unsigned long long cpu_steps = 0;
+unsigned long long frames_rendered = 0;
+timestamp_t start_time = 0;
+timestamp_t runtime = 0;
 
 
 //HAL object
@@ -124,7 +124,7 @@ static void hal_sleep_until(timestamp_t ts)
 	long long remaining = (long long)(ts - start);
 	if (remaining > 0)
 	{
-		Int32 ticks_to_sleep = (Int32)((float)remaining * (float)SysTicksPerSecond() / (float)CLOCK_FREQ);
+		Int32 ticks_to_sleep = (Int32)(remaining * SysTicksPerSecond() / CLOCK_FREQ);
 		SysTaskDelay(ticks_to_sleep);
 	}*/
 }
@@ -133,7 +133,7 @@ static timestamp_t hal_get_timestamp(void)
 {
 	//return clock() / CLOCKS_PER_SEC * CLOCK_FREQ;
 	//return ts;
-	timestamp_t ts = (timestamp_t)((float)TimGetTicks() / (float)SysTicksPerSecond() * (float)CLOCK_FREQ);
+	timestamp_t ts = (timestamp_t)((timestamp_t)TimGetTicks() * (timestamp_t)CLOCK_FREQ / (timestamp_t)SysTicksPerSecond());
 	return ts;
 	//return TimGetTicks() / SysTicksPerSecond() * CLOCK_FREQ;
 }
@@ -579,7 +579,7 @@ static void AppEventLoop(void)
 	tamalib_register_hal(&hal);
 	tamalib_init(g_program, NULL, (u32_t)CLOCK_FREQ);
 	//tamalib_set_speed(0);
-	//start_time = hal_get_timestamp();
+	start_time = hal_get_timestamp();
 	
 
 	while (!hal_handler())
@@ -590,12 +590,12 @@ static void AppEventLoop(void)
 		{
 			screen_ts = ts;
 			hal_update_screen();
-			//frames_rendered++;
+			frames_rendered++;
 		}
 		poll_keys();
 		
-		//cpu_steps++;
-		//runtime = ts - start_time;
+		cpu_steps++;
+		runtime = ts - start_time;
 	}
 }
 
