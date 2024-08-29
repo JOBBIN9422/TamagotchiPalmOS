@@ -48,14 +48,18 @@ static bool_t prev_buffer[LCD_HEIGHT][LCD_WIDTH] = {{0}};
 static bool_t curr_buffer[LCD_HEIGHT][LCD_WIDTH] = {{0}};
 static bool_t icon_buffer[ICON_NUM] = {0};
 static timestamp_t screen_ts = 0;
-//static PointType screen_top_left     = { LCD_OFFSET_X, LCD_OFFSET_Y };
-//static PointType screen_bottom_right = { LCD_OFFSET_X + 32, LCD_OFFSET_Y + 16 }; 
 static RectangleType screen_bounds = { { LCD_OFFSET_X, LCD_OFFSET_Y }, { 32, 16 } };
 
 //audio
 static u32_t current_freq = 0; // in dHz
 static unsigned int sin_pos = 0;
 static bool_t is_audio_playing = 0;
+
+//statistics
+//unsigned long long cpu_steps = 0;
+//unsigned long long frames_rendered = 0;
+//timestamp_t start_time = 0;
+//timestamp_t runtime = 0;
 
 
 //HAL object
@@ -130,7 +134,12 @@ static void hal_sleep_until(timestamp_t ts)
 static timestamp_t hal_get_timestamp(void)
 {
 	//return clock() / CLOCKS_PER_SEC * CLOCK_FREQ;
-	return TimGetTicks() / SysTicksPerSecond() * CLOCK_FREQ;
+	//timestamp_t seconds = (timestamp_t)TimGetSeconds();
+	//timestamp_t ts = seconds * (timestamp_t)CLOCK_FREQ;
+	//return ts;
+	timestamp_t ts = (timestamp_t)((float)TimGetTicks() / (float)SysTicksPerSecond() * CLOCK_FREQ);
+	return ts;
+	//return TimGetTicks() / SysTicksPerSecond() * CLOCK_FREQ;
 }
 
 
@@ -508,133 +517,6 @@ static Boolean MainFormHandleEvent(EventType * eventP)
 			 * then set handled to true. 
 			 */
 			break;
-		
-		/*case nilEvent:
-			keyState = KeyCurrentState();
-			
-			if (keyState & keyBitPageDown)
-			{
-				tamalib_set_button(BTN_MIDDLE, BTN_STATE_PRESSED);
-			}
-			else
-			{
-				tamalib_set_button(BTN_MIDDLE, BTN_STATE_RELEASED);
-			}
-			if (keyState & keyBitHard2)
-			{
-				tamalib_set_button(BTN_LEFT, BTN_STATE_PRESSED);
-			}
-			else
-			{
-				tamalib_set_button(BTN_LEFT, BTN_STATE_RELEASED);
-			}
-			if (keyState & keyBitHard3)
-			{
-				tamalib_set_button(BTN_RIGHT, BTN_STATE_PRESSED);
-			}
-			else
-			{
-				tamalib_set_button(BTN_RIGHT, BTN_STATE_RELEASED);
-			}
-			handled = true;
-			break;
-			
-		case ctlEnterEvent:
-		{
-			if (eventP->data.ctlEnter.controlID == LeftButton)
-			{
-				tamalib_set_button(BTN_LEFT, BTN_STATE_PRESSED);
-				//handled = true;
-				break;
-			}
-			if (eventP->data.ctlEnter.controlID == MiddleButton)
-			{
-				tamalib_set_button(BTN_MIDDLE, BTN_STATE_PRESSED);
-				//handled = true;
-				break;
-			}
-			if (eventP->data.ctlEnter.controlID == RightButton)
-			{
-				tamalib_set_button(BTN_RIGHT, BTN_STATE_PRESSED);
-				//handled = true;
-				break;
-			}
-
-			break;
-		}
-		
-		case ctlSelectEvent:
-		{
-			if (eventP->data.ctlSelect.controlID == LeftButton)
-			{
-				tamalib_set_button(BTN_LEFT, BTN_STATE_RELEASED);
-				handled = true;
-				break;
-			}
-			if (eventP->data.ctlSelect.controlID == MiddleButton)
-			{
-				tamalib_set_button(BTN_MIDDLE, BTN_STATE_RELEASED);
-				handled = true;
-				break;
-			}
-			if (eventP->data.ctlSelect.controlID == RightButton)
-			{
-				tamalib_set_button(BTN_RIGHT, BTN_STATE_RELEASED);
-				handled = true;
-				break;
-			}
-
-			break;
-		}
-		
-		case keyDownEvent:
-			switch (eventP->data.keyDown.chr)
-			{
-				case pageDownChr:
-					tamalib_set_button(BTN_MIDDLE, BTN_STATE_PRESSED);
-					handled = true;
-					break;
-				
-				case hard2Chr:
-					tamalib_set_button(BTN_LEFT, BTN_STATE_PRESSED);
-					handled = true;
-					break;
-					
-				case hard3Chr:
-					tamalib_set_button(BTN_RIGHT, BTN_STATE_PRESSED);
-					handled = true;
-					break;
-			}
-			break;
-			
-		case 0x4000:
-			switch (eventP->data.keyDown.chr)
-			{
-				case pageDownChr:
-					tamalib_set_button(BTN_MIDDLE, BTN_STATE_RELEASED);
-					handled = true;
-					break;
-				
-				case hard2Chr:
-					tamalib_set_button(BTN_LEFT, BTN_STATE_RELEASED);
-					handled = true;
-					break;
-					
-				case hard3Chr:
-					tamalib_set_button(BTN_RIGHT, BTN_STATE_RELEASED);
-					handled = true;
-					break;
-			}
-			break;*/
-		
-		/*
-		case penDownEvent:
-			//int screenX = eventP->screenX;
-			//int screenY = eventP->screenY;
-			WinDrawPixel(eventP->screenX, eventP->screenY);
-			handled = true;
-			break;
-			*/
 	}
     
 	return handled;
@@ -702,12 +584,16 @@ static void AppEventLoop(void)
 	{
 		tamalib_step();
 		ts = hal_get_timestamp();
-		if (ts - screen_ts >= CLOCK_FREQ / 30)
+		if (ts - screen_ts >= CLOCK_FREQ / TARGET_FPS)
 		{
 			screen_ts = ts;
 			hal_update_screen();
+			//frames_rendered++;
 		}
 		poll_keys();
+		
+		//cpu_steps++;
+		//runtime = ts - start_time;
 	}
 }
 
@@ -843,6 +729,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 	tamalib_register_hal(&hal);
 	tamalib_init(g_program, NULL, CLOCK_FREQ);
 	//tamalib_set_speed(0);
+	//start_time = hal_get_timestamp();
 
 	switch (cmd)
 	{
