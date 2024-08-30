@@ -573,6 +573,7 @@ static Boolean AppHandleEvent(EventType * eventP)
 static void AppEventLoop(void)
 {
 	timestamp_t ts;
+	UInt32 render_steps_slept = 0;
 	g_program = program_load(&g_program_size);	
 	tamalib_register_hal(&hal);
 	tamalib_init(g_program, NULL, (u32_t)CLOCK_FREQ);
@@ -584,12 +585,22 @@ static void AppEventLoop(void)
 	{
 		tamalib_step();
 		ts = hal_get_timestamp();
-		if (ts - screen_ts >= CLOCK_FREQ / TARGET_FPS)
+		if (render_steps_slept < RENDER_SLEEP_STEPS)
+		{
+			render_steps_slept++;
+		}
+		else
+		{
+			render_steps_slept = 0;
+			hal_update_screen();
+			frames_rendered++;
+		}
+		/*if (ts - screen_ts >= CLOCK_FREQ / TARGET_FPS)
 		{
 			screen_ts = ts;
 			hal_update_screen();
 			frames_rendered++;
-		}
+		}*/
 		poll_keys();
 		
 		cpu_steps++;
