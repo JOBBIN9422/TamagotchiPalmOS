@@ -127,6 +127,8 @@ static void hal_sleep_until(timestamp_t ts)
 		Int32 ticks_to_sleep = (Int32)(remaining * SysTicksPerSecond() / CLOCK_FREQ);
 		SysTaskDelay(ticks_to_sleep);
 	}*/
+	
+	//while ((long long)(ts - hal_get_timestamp()) > 0) { }
 }
 
 static timestamp_t hal_get_timestamp(void)

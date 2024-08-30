@@ -44,7 +44,7 @@ extern TamagotchiPalmOSPreferenceType g_prefs;
 #define LCD_OFFSET_X 64
 #define LCD_OFFSET_Y 72
 
-#define CLOCK_FREQ 1000
+#define CLOCK_FREQ 1000000
 #define TARGET_FPS 30
 
 /*********************************************************************
