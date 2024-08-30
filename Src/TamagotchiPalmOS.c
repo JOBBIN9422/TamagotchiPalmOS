@@ -131,11 +131,7 @@ static void hal_sleep_until(timestamp_t ts)
 
 static timestamp_t hal_get_timestamp(void)
 {
-	//return clock() / CLOCKS_PER_SEC * CLOCK_FREQ;
-	//return ts;
-	timestamp_t ts = (timestamp_t)((timestamp_t)TimGetTicks() * (timestamp_t)CLOCK_FREQ / (timestamp_t)SysTicksPerSecond());
-	return ts;
-	//return TimGetTicks() / SysTicksPerSecond() * CLOCK_FREQ;
+	return (timestamp_t)(TimGetTicks() * CLOCK_FREQ / SysTicksPerSecond());
 }
 
 
