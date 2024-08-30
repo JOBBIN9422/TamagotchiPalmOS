@@ -35,7 +35,7 @@ File:   34	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\cpu.c"
 File:   35	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\hw.c"
 File:   36	"C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\tamalib.c"
 
-Segment:   1   17982 bytes  "Segment 1"
+Segment:   1   17186 bytes  "Segment 1"
 Code: 000004      12 bytes  "__DummyStartup__"               File: "__RuntimeModule__"
 Code: 000010      30 bytes  "__rt_add64"                     File: "LongLong68K.c"
 Code: 00002e      30 bytes  "__rt_sub64"
@@ -206,19 +206,18 @@ Code: 003b4c     218 bytes  "op_scpy_cb"
 Code: 003c26      80 bytes  "op_not_cb"
 Code: 003c76     146 bytes  "wait_for_cycles"
 Code: 003d08     258 bytes  "process_interrupts"
-Code: 003e0a     668 bytes  "print_state"
-Code: 0040a6     108 bytes  "cpu_reset"
-Code: 004112      32 bytes  "cpu_init"
-Code: 004132     640 bytes  "cpu_step"
-Code: 0043b2      38 bytes  "hw_init"                        File: "C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\hw.c"
-Code: 0043d8     138 bytes  "hw_set_lcd_pin"
-Code: 004462      86 bytes  "hw_set_button"
-Code: 0044b8     132 bytes  "hw_set_buzzer_freq"
-Code: 00453c      22 bytes  "hw_enable_buzzer"
-Code: 004552      50 bytes  "tamalib_init"                   File: "C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\tamalib.c"
-Code: 004584      14 bytes  "tamalib_register_hal"
-Code: 004592      26 bytes  "tamalib_set_exec_mode"
-Code: 0045ac     146 bytes  "tamalib_step"
+Code: 003e0a     108 bytes  "cpu_reset"
+Code: 003e76      32 bytes  "cpu_init"
+Code: 003e96     512 bytes  "cpu_step"
+Code: 004096      38 bytes  "hw_init"                        File: "C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\hw.c"
+Code: 0040bc     138 bytes  "hw_set_lcd_pin"
+Code: 004146      86 bytes  "hw_set_button"
+Code: 00419c     132 bytes  "hw_set_buzzer_freq"
+Code: 004220      22 bytes  "hw_enable_buzzer"
+Code: 004236      50 bytes  "tamalib_init"                   File: "C:\Users\jaubi\Desktop\Palm\Dev\TamagotchiPalmOS\Src\tamalib.c"
+Code: 004268      14 bytes  "tamalib_register_hal"
+Code: 004276      26 bytes  "tamalib_set_exec_mode"
+Code: 004290     146 bytes  "tamalib_step"
 
 Data section below A5:  16280 bytes
 Data section above A5:     46 bytes
@@ -249,7 +248,7 @@ Data: -14399       1 bytes  "flags"
 Data: -14864     464 bytes  "memory"
 Data: -14868       4 bytes  "ts_freq"
 Data: -14876       8 bytes  "ref_ts"
-Data: -14877       1 bytes  "previous_cycles$1703"
+Data: -14877       1 bytes  "previous_cycles$1702"
 Data: -14882       4 bytes  "tick_counter"
 Data: -14883       1 bytes  "prog_timer_rld"
 Data: -14884       1 bytes  "prog_timer_data"
@@ -401,8 +400,8 @@ PRC DB Version:    1
 Type:              appl
 Creator:           JOBN
 Resource Count:    14
-Creation Time:     2024-08-30 @ 1443
-Modification Time: 2024-08-30 @ 1443
+Creation Time:     2024-08-30 @ 1611
+Modification Time: 2024-08-30 @ 1611
 Last Backup Time:  
 Attributes:         0x00000009
                     dmHdrAttrResDB
@@ -412,7 +411,7 @@ Attributes:         0x00000009
 [TamagotchiPalmOS]
 2:   tver           Application Version String         1000 (0x03e8)     4
 [1.0]
-3:   code           68K Object Code                    1 (0x0001)        17982
+3:   code           68K Object Code                    1 (0x0001)        17186
 4:   data           68K Global Data                    0 (0x0000)        14321
 5:   data           68K Global Data                    1 (0x0001)        2245
 6:   code           68K Object Code                    0 (0x0000)        24

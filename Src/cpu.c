@@ -1702,7 +1702,7 @@ int cpu_step(void)
 	//op_t op_struct;
 	u12_t op;
 	u8_t i;
-	breakpoint_t *bp = g_breakpoints;
+	//breakpoint_t *bp = g_breakpoints;
 	static u8_t previous_cycles = 0;
 
 	op = g_program[pc];
@@ -1713,16 +1713,16 @@ int cpu_step(void)
 			break;
 		}
 	}
-	//op_struct = ops[i];
-	if (ops[i].log == NULL) {
+
+	/*if (ops[i].log == NULL) {
 		g_hal->log(LOG_ERROR, "Unknown op-code 0x%X (pc = 0x%04X)\n", op, pc);
 		return 1;
-	}
+	}*/
 
 	next_pc = (pc + 1) & 0x1FFF;
 
 	/* Display the operation along with the current state of the processor */
-	print_state(i, op, pc);
+	//print_state(i, op, pc);
 
 	/* Match the speed of the real processor
 	 * NOTE: For better accuracy, the final wait should happen here, however
@@ -1777,13 +1777,13 @@ int cpu_step(void)
 	}
 
 	/* Check if we could pause the execution */
-	while (bp != NULL) {
+	/*while (bp != NULL) {
 		if (bp->addr == pc) {
 			return 1;
 		}
 
 		bp = bp->next;
-	}
+	}*/
 
 	return 0;
 }
