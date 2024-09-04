@@ -56,10 +56,10 @@ static unsigned int sin_pos = 0;
 static bool_t is_audio_playing = 0;
 
 //statistics
-unsigned long long cpu_steps = 0;
-unsigned long long frames_rendered = 0;
-timestamp_t start_time = 0;
-timestamp_t runtime = 0;
+//unsigned long long cpu_steps = 0;
+//unsigned long long frames_rendered = 0;
+//timestamp_t start_time = 0;
+//timestamp_t runtime = 0;
 
 
 //HAL object
@@ -133,7 +133,7 @@ static void hal_sleep_until(timestamp_t ts)
 
 static timestamp_t hal_get_timestamp(void)
 {
-	return (timestamp_t)(TimGetTicks() * CLOCK_FREQ / SysTicksPerSecond());
+	return (timestamp_t)(TimGetTicks());
 }
 
 
@@ -146,14 +146,6 @@ static void hal_set_lcd_icon(u8_t icon, bool_t val)
 static void hal_set_lcd_matrix(u8_t x, u8_t y, bool_t val)
 {
 	curr_buffer[y][x] = val;
-	/*if (val)
-	{
-		WinDrawPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
-	}
-	else
-	{
-		WinErasePixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
-	}*/
 }
 
 static void clear_screen(void)
@@ -164,7 +156,6 @@ static void clear_screen(void)
 static void hal_update_screen(void)
 {
 	unsigned int y, x;
-	//clear_screen();
 	for (y = 0; y < LCD_HEIGHT; y++)
 	{
 		for (x = 0; x < LCD_WIDTH; x++)
@@ -174,17 +165,6 @@ static void hal_update_screen(void)
 				WinInvertPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
 			}
 			prev_buffer[y][x] = curr_buffer[y][x];
-		
-			/*if (curr_buffer[y][x])
-			{
-				WinDrawPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
-
-			}
-			else
-			{
-				WinErasePixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
-
-			}*/
 		}
 	}
 }
@@ -246,13 +226,6 @@ static bool_t hal_is_log_enabled(int level)
 }
 
 static void hal_log(int level, char *buff, ...) {}
-
-static void reset_buttons(void)
-{
-	tamalib_set_button(BTN_LEFT, BTN_STATE_RELEASED);
-	tamalib_set_button(BTN_MIDDLE, BTN_STATE_RELEASED);
-	tamalib_set_button(BTN_RIGHT, BTN_STATE_RELEASED);
-}
 
 static void poll_keys(void)
 {
@@ -572,19 +545,20 @@ static Boolean AppHandleEvent(EventType * eventP)
 
 static void AppEventLoop(void)
 {
-	timestamp_t ts;
+	//timestamp_t ts;
 	UInt32 render_steps_slept = 0;
 	g_program = program_load(&g_program_size);	
 	tamalib_register_hal(&hal);
-	tamalib_init(g_program, NULL, (u32_t)CLOCK_FREQ);
-	//tamalib_set_speed(0);
-	start_time = hal_get_timestamp();
+	tamalib_init(g_program, NULL, (u32_t)SysTicksPerSecond());
+	tamalib_set_speed(0);
+	//start_time = hal_get_timestamp();
 	
 
 	while (!hal_handler())
 	{
+		poll_keys();
 		tamalib_step();
-		ts = hal_get_timestamp();
+		//ts = hal_get_timestamp();
 		if (render_steps_slept < RENDER_SLEEP_STEPS)
 		{
 			render_steps_slept++;
@@ -593,7 +567,7 @@ static void AppEventLoop(void)
 		{
 			render_steps_slept = 0;
 			hal_update_screen();
-			frames_rendered++;
+			//frames_rendered++;
 		}
 		/*if (ts - screen_ts >= CLOCK_FREQ / TARGET_FPS)
 		{
@@ -601,10 +575,10 @@ static void AppEventLoop(void)
 			hal_update_screen();
 			frames_rendered++;
 		}*/
-		poll_keys();
 		
-		cpu_steps++;
-		runtime = ts - start_time;
+		
+		//cpu_steps++;
+		//runtime = ts - start_time;
 	}
 }
 
