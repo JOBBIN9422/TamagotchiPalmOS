@@ -21,8 +21,7 @@
 
 typedef struct TamagotchiPalmOSPreferenceType
 {
-	Boolean pref1;
-	char pref2[256];
+	UInt16 frameskip;
 } TamagotchiPalmOSPreferenceType;
 
 /*********************************************************************

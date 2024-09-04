@@ -341,8 +341,7 @@ static Boolean MainFormDoCommand(UInt16 command)
 		case OptionsPreferences:
 		{
 			FormType * frmP;
-			ControlType * cbox = NULL;
-			FieldType * field = NULL;			
+			ControlType * slider = NULL;
 			UInt16 controlID = 0;
 			MemHandle handle = 0;
 
@@ -356,30 +355,10 @@ static Boolean MainFormDoCommand(UInt16 command)
 			 * Set the controls in the preference dialog to reflect our 
 			 * preference data structure
 			 */
-			cbox = (ControlType *)FrmGetObjectPtr(frmP, FrmGetObjectIndex(frmP, PrefsSetting1Checkbox));
-			if (cbox)
-				CtlSetValue(cbox, g_prefs.pref1);
-			
-			field = (FieldType *)FrmGetObjectPtr(frmP, FrmGetObjectIndex(frmP, PrefsSetting2Field));
-			if (field && (g_prefs.pref2[0] != '\0'))
+			slider = (ControlType *)FrmGetObjectPtr(frmP, FrmGetObjectIndex(frmP, FrameSkipSlider));
+			if (slider)
 			{
-				MemPtr text = NULL;
-				UInt32 len = StrLen(g_prefs.pref2);
-				
-				handle = FldGetTextHandle(field);
-				if (!handle)
-					handle = MemHandleNew(len + 1);
-				else
-					MemHandleResize(handle, len + 1);
-
-				text = MemHandleLock(handle);
-				if (text)
-					StrCopy((char *)text, g_prefs.pref2);
-
-				MemHandleUnlock(handle);
-				FldSetTextHandle(field, handle);
-				
-				handle = 0;
+				CtlSetSliderValues(slider, NULL, NULL, NULL, &g_prefs.frameskip);
 			}
 
 			/* 
@@ -395,26 +374,11 @@ static Boolean MainFormDoCommand(UInt16 command)
 				 * The user hit the OK button. Get the value of the controls 
 				 * and store them in our pref struct 
 				 */
-				if (cbox)
-					g_prefs.pref1 = CtlGetValue(cbox);
-					
-				if (field)
+				if (slider)
 				{
-					handle = FldGetTextHandle(field);
-					if (handle)
-					{				
-						MemPtr text = MemHandleLock(handle);
-						if (text)
-						{
-							/* Guard against the field text being longer than our pref's buffer */
-							UInt32 len = StrLen((const char *)text);
-							UInt32 count = (len > (sizeof(g_prefs.pref2) - 1)) ? (sizeof(g_prefs.pref2) - 1) : len;
-							MemMove(g_prefs.pref2, text, count);
-							g_prefs.pref2[count] = '\0';
-						}
-
-						MemHandleUnlock(handle);
-					}
+					UInt16 slider_value;
+					CtlGetSliderValues(slider, NULL, NULL, NULL, &slider_value);
+					g_prefs.frameskip = slider_value;
 				}
 			}
 			
@@ -537,7 +501,7 @@ static void AppEventLoop(void)
 {
 	//timestamp_t ts;
 	UInt16 bmp_error;
-	UInt32 render_steps_slept = 0;
+	UInt16 render_steps_slept = 0;
 	g_program = program_load(&g_program_size);	
 	tamalib_register_hal(&hal);
 	tamalib_init(g_program, NULL, (u32_t)SysTicksPerSecond());
@@ -552,7 +516,7 @@ static void AppEventLoop(void)
 		poll_keys();
 		tamalib_step();
 		//ts = hal_get_timestamp();
-		if (render_steps_slept < RENDER_SLEEP_STEPS)
+		if (render_steps_slept < g_prefs.frameskip)
 		{
 			render_steps_slept++;
 		}
@@ -594,8 +558,7 @@ static Err AppStart(void)
 		noPreferenceFound)
 	{
 		/* no prefs; initialize pref struct with default values */
-		g_prefs.pref1 = false;
-		g_prefs.pref2[0] = '\0';
+		g_prefs.frameskip = 20;
 	}
 	/* Setup main form event handler callback thunk (needed for "expanded" mode) */
 	_CW_GenerateEventThunk(MainFormHandleEvent, &MainFormHandleEventThunk);

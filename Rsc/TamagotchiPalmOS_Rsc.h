@@ -1,7 +1,6 @@
 /* pilrc generated file.  Do not edit!*/
-#define PrefsOKButton 1019
-#define PrefsSetting2Field 1018
-#define PrefsSetting1Checkbox 1016
+#define FrameSkipSlider 1017
+#define PrefsOKButton 1016
 #define PrefsCancelButton 1015
 #define PrefsForm 1014
 #define AboutVersionField 1013

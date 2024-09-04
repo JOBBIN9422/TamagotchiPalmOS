@@ -90,20 +90,15 @@ FORM ID PrefsForm AT (2 78 156 80)
 BEGIN
     TITLE "Preferences"
     GRAFFITISTATEINDICATOR AT (142 67)
-	CHECKBOX "Setting 1" ID PrefsSetting1Checkbox
-	    AT (10 21 60 12)
-	    LEFTANCHOR CHECKED
-    LABEL "Setting 2:" AUTOID AT (10 41)
-    FIELD ID PrefsSetting2Field AT (51 41 80 12)
-        UNDERLINED
-        MAXCHARS 80
-    BUTTON "OK" ID PrefsOKButton AT (5 63 40 12)
+	BUTTON "OK" ID PrefsOKButton AT (5 63 40 12)
     BUTTON "Cancel" ID PrefsCancelButton AT (51 63 40 12)
+	SLIDER ID FrameSkipSlider  AT (10 40 135 15) MIN 0 MAX 1000 PAGESIZE 10 VALUE 50  
+	LABEL "Frameskip" AUTOID AT (55 25)
 END
 
 ICONFAMILYEX
 BEGIN
-    BITMAP "icon-lg-1.bmp" BPP 1 
+    BITMAP "tama-icon-lg-1.bmp" BPP 1 
     BITMAP "icon-lg-2.bmp" BPP 2 
     BITMAP "icon-lg-8.bmp" BPP 8 TRANSPARENTINDEX 210 COMPRESS
     BITMAP "icon-lg-1-d144.bmp" BPP 1 DENSITY 2
