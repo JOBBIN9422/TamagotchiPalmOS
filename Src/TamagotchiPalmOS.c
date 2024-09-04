@@ -44,11 +44,11 @@ static u12_t* g_program = NULL;
 static u32_t g_program_size = 0;
 
 //display
-static bool_t prev_buffer[LCD_HEIGHT][LCD_WIDTH] = {{0}};
-static bool_t curr_buffer[LCD_HEIGHT][LCD_WIDTH] = {{0}};
 static bool_t icon_buffer[ICON_NUM] = {0};
 static timestamp_t screen_ts = 0;
 static RectangleType screen_bounds = { { LCD_OFFSET_X, LCD_OFFSET_Y }, { 32, 16 } };
+static BitmapType* screen_bmp = NULL;
+static void* screen_bmp_data = NULL;
 
 //audio
 static u32_t current_freq = 0; // in dHz
@@ -145,7 +145,8 @@ static void hal_set_lcd_icon(u8_t icon, bool_t val)
 
 static void hal_set_lcd_matrix(u8_t x, u8_t y, bool_t val)
 {
-	curr_buffer[y][x] = val;
+	bool_t* pix_location = ((bool_t*)screen_bmp_data) + y * LCD_WIDTH + x;
+	*pix_location = val ? 0b11111111 : 0b0;
 }
 
 static void clear_screen(void)
@@ -155,18 +156,7 @@ static void clear_screen(void)
 
 static void hal_update_screen(void)
 {
-	unsigned int y, x;
-	for (y = 0; y < LCD_HEIGHT; y++)
-	{
-		for (x = 0; x < LCD_WIDTH; x++)
-		{
-			if (curr_buffer[y][x] != prev_buffer[y][x])
-			{
-				WinInvertPixel(x + LCD_OFFSET_X, y + LCD_OFFSET_Y);
-			}
-			prev_buffer[y][x] = curr_buffer[y][x];
-		}
-	}
+	WinDrawBitmap((BitmapPtr)screen_bmp, LCD_OFFSET_X, LCD_OFFSET_Y);
 }
 
 static void hal_set_frequency(u32_t freq)
@@ -546,6 +536,7 @@ static Boolean AppHandleEvent(EventType * eventP)
 static void AppEventLoop(void)
 {
 	//timestamp_t ts;
+	UInt16 bmp_error;
 	UInt32 render_steps_slept = 0;
 	g_program = program_load(&g_program_size);	
 	tamalib_register_hal(&hal);
@@ -553,7 +544,9 @@ static void AppEventLoop(void)
 	tamalib_set_speed(0);
 	//start_time = hal_get_timestamp();
 	
-
+	screen_bmp = BmpCreate(LCD_WIDTH, LCD_HEIGHT, 8, NULL, &bmp_error);
+	screen_bmp_data = BmpGetBits(screen_bmp); 
+	
 	while (!hal_handler())
 	{
 		poll_keys();
@@ -618,6 +611,8 @@ static Err AppStart(void)
 
 static void AppStop(void)
 {
+	BmpDelete(screen_bmp);
+
 	/* 
 	 * Write the saved preferences / saved-state information.  This
 	 * data will be saved during a HotSync backup. 

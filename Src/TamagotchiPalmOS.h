@@ -46,7 +46,7 @@ extern TamagotchiPalmOSPreferenceType g_prefs;
 
 #define CLOCK_FREQ 1000
 #define TARGET_FPS 30
-#define RENDER_SLEEP_STEPS 200
+#define RENDER_SLEEP_STEPS 20
 
 /*********************************************************************
  * Functions
