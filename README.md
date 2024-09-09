@@ -7,6 +7,6 @@ Performance is still quite bad, likely due to the speed of the drawing operation
 Not all features are implemented.
 
 CREDITS:
-TamaLib & TamaTool by [JC Rona](https://github.com/jcrona)
-ArduinoGotchi by [GaryZ88](https://github.com/GaryZ88/ArduinoGotchi)
-CloudPilot by [Christian Speckner](https://github.com/cloudpilot-emu/cloudpilot-emu)
+- TamaLib & TamaTool by [JC Rona](https://github.com/jcrona)
+- ArduinoGotchi by [GaryZ88](https://github.com/GaryZ88/ArduinoGotchi)
+- CloudPilot by [Christian Speckner](https://github.com/cloudpilot-emu/cloudpilot-emu)
