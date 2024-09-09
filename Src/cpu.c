@@ -1615,7 +1615,8 @@ static void process_interrupts(void)
 			pc = TO_PC(PCB, 1, interrupts[i].vector);
 			call_depth++;
 
-			ref_ts = wait_for_cycles(ref_ts, 12);
+			//ref_ts = wait_for_cycles(ref_ts, 12);
+			tick_counter += 12;
 			interrupts[i].triggered = 0;
 		}
 	}
@@ -1721,7 +1722,8 @@ int cpu_step(void)
 	 * NOTE: For better accuracy, the final wait should happen here, however
 	 * the downside is that all interrupts will likely be delayed by one OP
 	 */
-	ref_ts = wait_for_cycles(ref_ts, previous_cycles);
+	//ref_ts = wait_for_cycles(ref_ts, previous_cycles);
+	tick_counter += previous_cycles;
 
 	/* Process the OP code */
 	if (ops[i].cb != NULL) {
