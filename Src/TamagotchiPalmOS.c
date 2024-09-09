@@ -20,7 +20,6 @@
 #include "TamagotchiPalmOS_Rsc.h"
 
 #include "rom_12bit.h"
-#include "tamalib.h"
 
 /*********************************************************************
  * Entry Points
@@ -29,41 +28,35 @@
 /*********************************************************************
  * Global variables
  *********************************************************************/
+
+/* MainFormHandleEventThunk
+ * holds event callback thunk for main form event handler */
+static _CW_EventHandlerThunk MainFormHandleEventThunk;
+
 /* 
  * g_prefs
  * cache for application preferences during program execution 
  */
 TamagotchiPalmOSPreferenceType g_prefs;
 
-/* MainFormHandleEventThunk
- * holds event callback thunk for main form event handler */
-static _CW_EventHandlerThunk MainFormHandleEventThunk;
-
 //the ROM loaded into memory
-static u12_t* g_program = NULL;
-static u32_t g_program_size = 0;
+u12_t* g_program = NULL;
+u32_t g_program_size = 0;
 
 //display
-static bool_t icon_buffer[ICON_NUM] = {0};
-static timestamp_t screen_ts = 0;
-static RectangleType screen_bounds = { { LCD_OFFSET_X, LCD_OFFSET_Y }, { 32, 16 } };
-static BitmapType* screen_bmp = NULL;
-static void* screen_bmp_data = NULL;
+bool_t icon_buffer[ICON_NUM] = {0};
+timestamp_t screen_ts = 0;
+RectangleType screen_bounds = { { LCD_OFFSET_X, LCD_OFFSET_Y }, { 32, 16 } };
+BitmapType* screen_bmp = NULL;
+void* screen_bmp_data = NULL;
 
 //audio
-static u32_t current_freq = 0; // in dHz
-static unsigned int sin_pos = 0;
-static bool_t is_audio_playing = 0;
-
-//statistics
-//unsigned long long cpu_steps = 0;
-//unsigned long long frames_rendered = 0;
-//timestamp_t start_time = 0;
-//timestamp_t runtime = 0;
-
+u32_t current_freq = 0; // in dHz
+unsigned int sin_pos = 0;
+bool_t is_audio_playing = 0;
 
 //HAL object
-static hal_t hal = {
+hal_t hal = {
 	&hal_malloc,
 	&hal_free,
 	&hal_halt,
@@ -78,7 +71,6 @@ static hal_t hal = {
 	&hal_play_frequency,
 	&hal_handler,
 };
-
 
 /*********************************************************************
  * Internal Constants
@@ -284,26 +276,7 @@ static void * GetObjectPtr(UInt16 objectID)
 
 static void MainFormInit(FormType *frmP)
 {
-	/*
-	FieldType *field;
-	const char *wizardDescription;
-	UInt16 fieldIndex;
 
-	
-	fieldIndex = FrmGetObjectIndex(frmP, MainDescriptionField);
-	field = (FieldType *)FrmGetObjectPtr(frmP, fieldIndex);
-	FrmSetFocus(frmP, fieldIndex);
-
-	wizardDescription =
-		"C application\n"
-		"Creator Code: JOBN\n"
-		"\n"
-		"Other SDKs:\n"
-		;
-				
-	//dont stack FldInsert calls, since each one generates a
-	//fldChangedEvent, and multiple uses can overflow the event queue 
-	FldInsert(field, wizardDescription, StrLen(wizardDescription));*/
 }
 
 /*
@@ -499,23 +472,24 @@ static Boolean AppHandleEvent(EventType * eventP)
 
 static void AppEventLoop(void)
 {
-	//timestamp_t ts;
 	UInt16 bmp_error;
 	UInt16 render_steps_slept = 0;
+	
+	//load ROM and init tama emu
 	g_program = program_load(&g_program_size);	
 	tamalib_register_hal(&hal);
 	tamalib_init(g_program, NULL, (u32_t)SysTicksPerSecond());
 	tamalib_set_speed(0);
-	//start_time = hal_get_timestamp();
 	
+	//try to allocate the BMP for drawing the screen
 	screen_bmp = BmpCreate(LCD_WIDTH, LCD_HEIGHT, 8, NULL, &bmp_error);
 	screen_bmp_data = BmpGetBits(screen_bmp); 
 	
+	//event loop: read buttons, step the CPU, and draw at the specified interval
 	while (!hal_handler())
 	{
 		poll_keys();
 		tamalib_step();
-		//ts = hal_get_timestamp();
 		if (render_steps_slept < g_prefs.frameskip)
 		{
 			render_steps_slept++;
@@ -524,18 +498,7 @@ static void AppEventLoop(void)
 		{
 			render_steps_slept = 0;
 			hal_update_screen();
-			//frames_rendered++;
 		}
-		/*if (ts - screen_ts >= CLOCK_FREQ / TARGET_FPS)
-		{
-			screen_ts = ts;
-			hal_update_screen();
-			frames_rendered++;
-		}*/
-		
-		
-		//cpu_steps++;
-		//runtime = ts - start_time;
 	}
 }
 

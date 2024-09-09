@@ -1699,10 +1699,8 @@ void cpu_release(void)
 
 int cpu_step(void)
 {
-	//op_t op_struct;
 	u12_t op;
 	u8_t i;
-	//breakpoint_t *bp = g_breakpoints;
 	static u8_t previous_cycles = 0;
 
 	op = g_program[pc];
@@ -1713,11 +1711,6 @@ int cpu_step(void)
 			break;
 		}
 	}
-
-	/*if (ops[i].log == NULL) {
-		g_hal->log(LOG_ERROR, "Unknown op-code 0x%X (pc = 0x%04X)\n", op, pc);
-		return 1;
-	}*/
 
 	next_pc = (pc + 1) & 0x1FFF;
 
@@ -1775,15 +1768,6 @@ int cpu_step(void)
 	if (I && i > 0) { // Do not process interrupts after a PSET operation
 		process_interrupts();
 	}
-
-	/* Check if we could pause the execution */
-	/*while (bp != NULL) {
-		if (bp->addr == pc) {
-			return 1;
-		}
-
-		bp = bp->next;
-	}*/
 
 	return 0;
 }

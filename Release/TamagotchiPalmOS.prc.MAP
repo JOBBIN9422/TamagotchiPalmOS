@@ -257,8 +257,8 @@ Data: -14898       4 bytes  "call_depth"
 Data: -14902       4 bytes  "g_breakpoints"
 Data: -14906       4 bytes  "inputs"
 Data: -14910       4 bytes  "g_program"
-Data: -14912       2 bytes  "g_prefs"
-Data: -14944      32 bytes  "MainFormHandleEventThunk"
+Data: -14942      32 bytes  "MainFormHandleEventThunk"
+Data: -14944       2 bytes  "g_prefs"
 Data: -14945       1 bytes  "is_audio_playing"
 Data: -14948       2 bytes  "sin_pos"
 Data: -14952       4 bytes  "current_freq"
@@ -394,8 +394,8 @@ PRC DB Version:    1
 Type:              appl
 Creator:           JOBN
 Resource Count:    14
-Creation Time:     2024-09-04 @ 1638
-Modification Time: 2024-09-04 @ 1638
+Creation Time:     2024-09-09 @ 1339
+Modification Time: 2024-09-09 @ 1339
 Last Backup Time:  
 Attributes:         0x00000009
                     dmHdrAttrResDB

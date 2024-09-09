@@ -14,21 +14,8 @@
 #define TAMAGOTCHIPALMOS_H_
 
 #include "hal_types.h"
+#include "tamalib.h"
 
-/*********************************************************************
- * Internal Structures
- *********************************************************************/
-
-typedef struct TamagotchiPalmOSPreferenceType
-{
-	UInt16 frameskip;
-} TamagotchiPalmOSPreferenceType;
-
-/*********************************************************************
- * Global variables
- *********************************************************************/
-
-extern TamagotchiPalmOSPreferenceType g_prefs;
 
 /*********************************************************************
  * Internal Constants
@@ -45,7 +32,41 @@ extern TamagotchiPalmOSPreferenceType g_prefs;
 
 #define CLOCK_FREQ 1000
 #define TARGET_FPS 30
-#define RENDER_SLEEP_STEPS 20
+
+/*********************************************************************
+ * Internal Structures
+ *********************************************************************/
+
+typedef struct TamagotchiPalmOSPreferenceType
+{
+	UInt16 frameskip;
+} TamagotchiPalmOSPreferenceType;
+
+/*********************************************************************
+ * Global variables
+ *********************************************************************/
+
+//app settings
+extern TamagotchiPalmOSPreferenceType g_prefs;
+
+//Tama ROM
+extern u12_t* g_program;
+extern u32_t g_program_size;
+
+//drawing
+static bool_t icon_buffer[ICON_NUM];
+extern timestamp_t screen_ts;
+extern RectangleType screen_bounds;
+extern BitmapType* screen_bmp;
+extern void* screen_bmp_data;
+
+//Tama audio
+extern u32_t current_freq; // in dHz
+extern unsigned int sin_pos;
+extern bool_t is_audio_playing;
+
+//HAL object
+extern hal_t hal;
 
 /*********************************************************************
  * Functions
