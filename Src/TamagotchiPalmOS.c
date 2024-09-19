@@ -130,23 +130,23 @@ static timestamp_t hal_get_timestamp(void)
 
 
 
-static void hal_set_lcd_icon(u8_t icon, bool_t val)
+static inline void hal_set_lcd_icon(u8_t icon, bool_t val)
 {
 	icon_buffer[icon] = val;
 }
 
-static void hal_set_lcd_matrix(u8_t x, u8_t y, bool_t val)
+static inline void hal_set_lcd_matrix(u8_t x, u8_t y, bool_t val)
 {
 	bool_t* pix_location = ((bool_t*)screen_bmp_data) + y * LCD_WIDTH + x;
 	*pix_location = val ? 0b11111111 : 0b0;
 }
 
-static void clear_screen(void)
+static inline void clear_screen(void)
 {
 	WinEraseRectangle(&screen_bounds, 0);
 }
 
-static void hal_update_screen(void)
+static inline void hal_update_screen(void)
 {
 	WinDrawBitmap((BitmapPtr)screen_bmp, LCD_OFFSET_X, LCD_OFFSET_Y);
 }
@@ -168,7 +168,7 @@ static void hal_play_frequency(bool_t en)
 	}
 }
 
-static int hal_handler(void)
+static inline int hal_handler(void)
 {
 	UInt16 error;
 	EventType event;
@@ -209,7 +209,7 @@ static bool_t hal_is_log_enabled(int level)
 
 static void hal_log(int level, char *buff, ...) {}
 
-static void poll_keys(void)
+static inline void poll_keys(void)
 {
 	UInt32 keyState = KeyCurrentState();
 		
