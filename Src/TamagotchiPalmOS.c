@@ -45,6 +45,7 @@ u32_t g_program_size = 0;
 
 //display
 bool_t icon_buffer[ICON_NUM] = {0};
+UInt16 icon_button_buffer[ICON_NUM] = { FoodButton, LightsButton, GameButton, MedicineButton, CleanButton, StatsButton, DisciplineButton, AttentionButton };
 timestamp_t screen_ts = 0;
 RectangleType screen_bounds = { { LCD_OFFSET_X, LCD_OFFSET_Y }, { 32, 16 } };
 BitmapType* screen_bmp = NULL;
@@ -148,7 +149,28 @@ static inline void clear_screen(void)
 
 static inline void hal_update_screen(void)
 {
+	int i;
+	ControlType* icon_button_ptr;
+	
 	WinDrawBitmap((BitmapPtr)screen_bmp, LCD_OFFSET_X, LCD_OFFSET_Y);
+	
+	for (i = 0; i < ICON_NUM; i++)
+	{
+		icon_button_ptr = (ControlType*)GetObjectPtr(icon_button_buffer[i]);
+		if (icon_button_ptr)
+		{
+			if (icon_buffer[i] && !CtlEnabled(icon_button_ptr))
+			{
+				CtlShowControl(icon_button_ptr);
+				CtlSetEnabled(icon_button_ptr, 1);
+			}
+			else if (!icon_buffer[i] && CtlEnabled(icon_button_ptr))
+			{
+				CtlHideControl(icon_button_ptr);
+				CtlSetEnabled(icon_button_ptr, 0);
+			}
+		}
+	}
 }
 
 static void hal_set_frequency(u32_t freq)

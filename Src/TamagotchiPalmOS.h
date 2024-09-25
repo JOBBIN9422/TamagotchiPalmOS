@@ -54,7 +54,8 @@ extern u12_t* g_program;
 extern u32_t g_program_size;
 
 //drawing
-static bool_t icon_buffer[ICON_NUM];
+extern bool_t icon_buffer[ICON_NUM];
+extern UInt16 icon_button_buffer[ICON_NUM];
 extern timestamp_t screen_ts;
 extern RectangleType screen_bounds;
 extern BitmapType* screen_bmp;
@@ -94,5 +95,7 @@ static void clear_screen(void);
 static void poll_keys(void);
 
 static Boolean AppHandleEvent(EventType * eventP);
+
+static void * GetObjectPtr(UInt16 objectID);
 
 #endif /* TAMAGOTCHIPALMOS_H_ */

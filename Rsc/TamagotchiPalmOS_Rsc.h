@@ -1,11 +1,19 @@
 /* pilrc generated file.  Do not edit!*/
-#define FrameSkipSlider 1017
-#define PrefsOKButton 1016
-#define PrefsCancelButton 1015
-#define PrefsForm 1014
-#define AboutVersionField 1013
-#define AboutOKButton 1010
-#define AboutForm 1009
+#define FrameSkipSlider 1025
+#define PrefsOKButton 1024
+#define PrefsCancelButton 1023
+#define PrefsForm 1022
+#define AboutVersionField 1021
+#define AboutOKButton 1018
+#define AboutForm 1017
+#define AttentionButton 1016
+#define StatsButton 1015
+#define DisciplineButton 1014
+#define CleanButton 1013
+#define MedicineButton 1012
+#define GameButton 1011
+#define LightsButton 1010
+#define FoodButton 1009
 #define MainForm 1008
 #define RomIncompatibleAlert 1007
 #define EditOnlyMenuBar 1005

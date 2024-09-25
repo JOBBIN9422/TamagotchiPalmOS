@@ -61,6 +61,14 @@ BEGIN
 	//BUTTON "" ID LeftButton  AT (1 135 24 24)
 	//BUTTON "" ID MiddleButton   AT (68 135 24 24)
 	//BUTTON "" ID RightButton   AT (135 135 24 24)
+	BUTTON "Food" ID FoodButton  AT (3 18 30 16) FRAME  
+	BUTTON "Lights" ID LightsButton   AT (36 18 38 16) 
+	BUTTON "Game" ID GameButton   AT (77 18 38 16) 
+	BUTTON "Medicine" ID MedicineButton   AT (118 18 40 16) 
+	BUTTON "Clean" ID CleanButton   AT (3 141 30 16) FRAME 
+		BUTTON "Discipline" ID DisciplineButton    AT (77 141 38 16) 
+BUTTON "Stats" ID StatsButton    AT (36 141 38 16) 
+	BUTTON "Attention" ID AttentionButton    AT (118 141 40 16) 
 END
 
 FORM ID AboutForm AT (2 2 156 156)
