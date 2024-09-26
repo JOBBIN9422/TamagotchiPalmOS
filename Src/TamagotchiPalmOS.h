@@ -40,6 +40,36 @@
 typedef struct TamagotchiPalmOSPreferenceType
 {
 	UInt16 frameskip;
+	
+	//emulator state
+	u13_t pc;
+	u12_t x;
+	u12_t y;
+	u4_t a;
+	u4_t b;
+	u5_t np;
+	u8_t sp;
+	u4_t flags;
+
+	u32_t tick_counter;
+	u32_t clk_timer_timestamp;
+	u32_t prog_timer_timestamp;
+	bool_t prog_timer_enabled;
+	u8_t prog_timer_data;
+	u8_t prog_timer_rld;
+
+	u32_t call_depth;
+
+	//interrupt_t members
+	/*u4_t factor_flag_reg;
+	u4_t mask_reg;
+	bool_t triggered;
+	u8_t vector;*/
+	
+	interrupt_t interrupts[INT_SLOT_NUM];
+	
+	MEM_BUFFER_TYPE memory[MEM_BUFFER_SIZE];
+	
 } TamagotchiPalmOSPreferenceType;
 
 /*********************************************************************
@@ -93,6 +123,9 @@ static void hal_log(int level, char *buff, ...);
 
 static void clear_screen(void);
 static void poll_keys(void);
+
+static void load_state_from_prefs(void);
+static void save_state_to_prefs(void);
 
 static Boolean AppHandleEvent(EventType * eventP);
 

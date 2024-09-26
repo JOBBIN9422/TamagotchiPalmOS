@@ -107,8 +107,6 @@ static void hal_free(void* ptr)
 
 static void hal_halt(void)
 {
-	tamalib_set_exec_mode(EXEC_MODE_PAUSE);
-	AppStop();
 }
 
 static void hal_sleep_until(timestamp_t ts)
@@ -258,6 +256,92 @@ static inline void poll_keys(void)
 	else
 	{
 		tamalib_set_button(BTN_RIGHT, BTN_STATE_RELEASED);
+	}
+}
+
+static void load_state_from_prefs(void)
+{
+	int i;
+	state_t* load_state;
+	
+	tamalib_set_exec_mode(EXEC_MODE_PAUSE);
+	
+	//fetch current state from emulator
+	load_state = tamalib_get_state();
+	
+	//load state primitives from preferences struct
+	*(load_state->pc) = g_prefs.pc;
+	*(load_state->x) = g_prefs.x;
+	*(load_state->y) = g_prefs.y;
+	*(load_state->a) = g_prefs.a;
+	*(load_state->b) = g_prefs.b;
+	*(load_state->np) = g_prefs.np;
+	*(load_state->sp) = g_prefs.sp;
+	*(load_state->flags) = g_prefs.flags;
+	*(load_state->tick_counter) = g_prefs.tick_counter;
+	*(load_state->clk_timer_timestamp) = g_prefs.clk_timer_timestamp;
+	*(load_state->prog_timer_timestamp) = g_prefs.prog_timer_timestamp;
+	*(load_state->prog_timer_enabled) = g_prefs.prog_timer_enabled;
+	*(load_state->prog_timer_data) = g_prefs.prog_timer_data;
+	*(load_state->prog_timer_rld) = g_prefs.prog_timer_rld;
+	*(load_state->call_depth) = g_prefs.call_depth;
+	
+	//load interrupts from preference struct
+	for (i = 0; i < INT_SLOT_NUM; i++)
+	{
+		load_state->interrupts[i].factor_flag_reg = g_prefs.interrupts[i].factor_flag_reg & 0xF;
+		load_state->interrupts[i].mask_reg = g_prefs.interrupts[i].mask_reg & 0xF;
+		load_state->interrupts[i].triggered = g_prefs.interrupts[i].triggered & 0x1;
+	}
+
+	//load memory from preference struct
+	for (i = 0; i < MEM_BUFFER_SIZE; i++)
+	{
+		load_state->memory[i] = g_prefs.memory[i] & 0xF;
+	}
+	
+	//read memory and unpause
+	tamalib_refresh_hw();
+	tamalib_set_exec_mode(EXEC_MODE_RUN);
+}
+
+static void save_state_to_prefs(void)
+{
+	UInt32 i;
+	state_t* save_state;
+	
+	tamalib_set_exec_mode(EXEC_MODE_PAUSE);
+	
+	//fetch current state from emulator
+	save_state = tamalib_get_state();
+	
+	//save state primitives to prefs struct
+	g_prefs.pc = *(save_state->pc);
+	g_prefs.x = *(save_state->x);
+	g_prefs.y = *(save_state->y);
+	g_prefs.a = *(save_state->a);
+	g_prefs.b = *(save_state->b);
+	g_prefs.np = *(save_state->np);
+	g_prefs.sp = *(save_state->sp);
+	g_prefs.flags = *(save_state->flags);
+	g_prefs.tick_counter = *(save_state->tick_counter);
+	g_prefs.clk_timer_timestamp = *(save_state->clk_timer_timestamp);
+	g_prefs.prog_timer_timestamp = *(save_state->prog_timer_timestamp);
+	g_prefs.prog_timer_enabled = *(save_state->prog_timer_enabled);
+	g_prefs.prog_timer_data = *(save_state->prog_timer_data);
+	g_prefs.prog_timer_rld = *(save_state->prog_timer_rld);
+	g_prefs.call_depth = *(save_state->call_depth);
+	
+	for (i = 0; i < INT_SLOT_NUM; i++)
+	{
+		g_prefs.interrupts[i].factor_flag_reg = save_state->interrupts[i].factor_flag_reg & 0xF;
+		g_prefs.interrupts[i].mask_reg  = save_state->interrupts[i].mask_reg & 0xF;
+		g_prefs.interrupts[i].triggered = save_state->interrupts[i].triggered & 0x1;
+	}
+	
+	for (i = 0; i < MEM_BUFFER_SIZE; i++)
+	{
+		g_prefs.memory[i] = save_state->memory[i] & 0xF;
 	}
 }
 
@@ -493,20 +577,9 @@ static Boolean AppHandleEvent(EventType * eventP)
  */
 
 static void AppEventLoop(void)
-{
-	UInt16 bmp_error;
+{	
 	UInt16 render_steps_slept = 0;
-	
-	//load ROM and init tama emu
-	g_program = program_load(&g_program_size);	
-	tamalib_register_hal(&hal);
-	tamalib_init(g_program, NULL, (u32_t)SysTicksPerSecond());
-	tamalib_set_speed(0);
-	
-	//try to allocate the BMP for drawing the screen
-	screen_bmp = BmpCreate(LCD_WIDTH, LCD_HEIGHT, 8, NULL, &bmp_error);
-	screen_bmp_data = BmpGetBits(screen_bmp); 
-	
+
 	//event loop: read buttons, step the CPU, and draw at the specified interval
 	while (!hal_handler())
 	{
@@ -534,8 +607,20 @@ static void AppEventLoop(void)
  */
 
 static Err AppStart(void)
-{
+{	
 	UInt16 prefsSize;
+	UInt16 bmp_error;
+	
+	//load ROM and init tama emu
+	g_program = program_load(&g_program_size);	
+	tamalib_register_hal(&hal);
+	tamalib_init(g_program, NULL, (u32_t)SysTicksPerSecond());
+	tamalib_set_speed(0);
+	
+	//try to allocate the BMP for drawing the screen
+	screen_bmp = BmpCreate(LCD_WIDTH, LCD_HEIGHT, 8, NULL, &bmp_error);
+	screen_bmp_data = BmpGetBits(screen_bmp); 
+	
 	/* Read the saved preferences / saved-state information. */
 	prefsSize = sizeof(g_prefs);
 	if (PrefGetAppPreferences(
@@ -545,6 +630,12 @@ static Err AppStart(void)
 		/* no prefs; initialize pref struct with default values */
 		g_prefs.frameskip = 20;
 	}
+	else
+	{
+		load_state_from_prefs();
+	}
+	
+	
 	/* Setup main form event handler callback thunk (needed for "expanded" mode) */
 	_CW_GenerateEventThunk(MainFormHandleEvent, &MainFormHandleEventThunk);
 
@@ -560,7 +651,9 @@ static Err AppStart(void)
 static void AppStop(void)
 {
 	BmpDelete(screen_bmp);
-
+	
+	save_state_to_prefs();
+		
 	/* 
 	 * Write the saved preferences / saved-state information.  This
 	 * data will be saved during a HotSync backup. 
@@ -668,7 +761,6 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
 			AppEventLoop();
 
 			AppStop();
-			hal_halt();
 			break;
 	}
 

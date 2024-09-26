@@ -36,7 +36,7 @@
 /* Define this if you want to reduce the footprint of the memory buffer from 4096 u4_t (most likely bytes)
  * to 464 u8_t (bytes for sure), while increasing slightly the number of operations needed to read/write from/to it.
  */
-#define LOW_FOOTPRINT
+//#define LOW_FOOTPRINT
 
 #ifdef LOW_FOOTPRINT
 /* Invalid memory areas are not buffered to reduce the footprint of the library in memory */
