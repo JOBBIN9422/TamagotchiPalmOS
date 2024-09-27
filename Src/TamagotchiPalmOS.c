@@ -332,12 +332,15 @@ static void save_state_to_prefs(void)
 	g_prefs.prog_timer_rld = *(save_state->prog_timer_rld);
 	g_prefs.call_depth = *(save_state->call_depth);
 	
+	//save interrupts to prefs struct
 	for (i = 0; i < INT_SLOT_NUM; i++)
 	{
 		g_prefs.interrupts[i].factor_flag_reg = save_state->interrupts[i].factor_flag_reg & 0xF;
 		g_prefs.interrupts[i].mask_reg  = save_state->interrupts[i].mask_reg & 0xF;
 		g_prefs.interrupts[i].triggered = save_state->interrupts[i].triggered & 0x1;
 	}
+	
+	//save memory to prefs struct
 	
 	for (i = 0; i < MEM_BUFFER_SIZE; i++)
 	{
