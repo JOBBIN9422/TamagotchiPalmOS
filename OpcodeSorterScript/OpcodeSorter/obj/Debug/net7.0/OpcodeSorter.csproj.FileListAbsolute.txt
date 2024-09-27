@@ -1,0 +1,17 @@
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\bin\Debug\net7.0\OpcodeSorter.exe
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\bin\Debug\net7.0\input.txt
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\bin\Debug\net7.0\profiler-output.txt
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\bin\Debug\net7.0\OpcodeSorter.deps.json
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\bin\Debug\net7.0\OpcodeSorter.runtimeconfig.json
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\bin\Debug\net7.0\OpcodeSorter.dll
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\bin\Debug\net7.0\OpcodeSorter.pdb
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\obj\Debug\net7.0\OpcodeSorter.csproj.AssemblyReference.cache
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\obj\Debug\net7.0\OpcodeSorter.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\obj\Debug\net7.0\OpcodeSorter.AssemblyInfoInputs.cache
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\obj\Debug\net7.0\OpcodeSorter.AssemblyInfo.cs
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\obj\Debug\net7.0\OpcodeSorter.csproj.CoreCompileInputs.cache
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\obj\Debug\net7.0\OpcodeSorter.dll
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\obj\Debug\net7.0\refint\OpcodeSorter.dll
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\obj\Debug\net7.0\OpcodeSorter.pdb
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\obj\Debug\net7.0\OpcodeSorter.genruntimeconfig.cache
+C:\Users\jaubi\source\repos\OpcodeSorter\OpcodeSorter\obj\Debug\net7.0\ref\OpcodeSorter.dll
