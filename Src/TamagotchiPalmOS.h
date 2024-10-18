@@ -90,6 +90,7 @@ extern timestamp_t screen_ts;
 extern RectangleType screen_bounds;
 extern BitmapType* screen_bmp;
 extern void* screen_bmp_data;
+extern UInt32 screen_bmp_index_table[LCD_HEIGHT][LCD_WIDTH];
 
 //Tama audio
 extern u32_t current_freq; // in dHz
@@ -126,6 +127,8 @@ static void poll_keys(void);
 
 static void load_state_from_prefs(void);
 static void save_state_to_prefs(void);
+
+static void calc_screen_bmp_index_table(void);
 
 static Boolean AppHandleEvent(EventType * eventP);
 

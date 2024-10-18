@@ -50,6 +50,7 @@ timestamp_t screen_ts = 0;
 RectangleType screen_bounds = { { LCD_OFFSET_X, LCD_OFFSET_Y }, { 32, 16 } };
 BitmapType* screen_bmp = NULL;
 void* screen_bmp_data = NULL;
+UInt32 screen_bmp_index_table[LCD_HEIGHT][LCD_WIDTH] = {{0}};
 
 //audio
 u32_t current_freq = 0; // in dHz
@@ -136,7 +137,8 @@ static inline void hal_set_lcd_icon(u8_t icon, bool_t val)
 
 static inline void hal_set_lcd_matrix(u8_t x, u8_t y, bool_t val)
 {
-	bool_t* pix_location = ((bool_t*)screen_bmp_data) + (y << 5) + x;
+	//look up the pixel mem address for the given x/y coords
+	bool_t* pix_location = (bool_t*)screen_bmp_index_table[y][x];
 	*pix_location = val ? 0b11111111 : 0b0;
 }
 
@@ -345,6 +347,19 @@ static void save_state_to_prefs(void)
 	for (i = 0; i < MEM_BUFFER_SIZE; i++)
 	{
 		g_prefs.memory[i] = save_state->memory[i] & 0xF;
+	}
+}
+
+static void calc_screen_bmp_index_table(void)
+{
+	UInt32 y, x;
+	for (y = 0; y < LCD_HEIGHT; y++)
+	{
+		for (x = 0; x < LCD_WIDTH; x++)
+		{
+			//take the base bitmap data address and calculate the X/Y offset for each screen pixel (32 bit type for pointer arithmetic)
+			screen_bmp_index_table[y][x] = (UInt32)((bool_t*)screen_bmp_data + y * LCD_WIDTH + x);
+		}
 	}
 }
 
@@ -623,6 +638,9 @@ static Err AppStart(void)
 	//try to allocate the BMP for drawing the screen
 	screen_bmp = BmpCreate(LCD_WIDTH, LCD_HEIGHT, 8, NULL, &bmp_error);
 	screen_bmp_data = BmpGetBits(screen_bmp); 
+	
+	//precalculate bitmap index lookup table
+	calc_screen_bmp_index_table();
 	
 	/* Read the saved preferences / saved-state information. */
 	prefsSize = sizeof(g_prefs);
