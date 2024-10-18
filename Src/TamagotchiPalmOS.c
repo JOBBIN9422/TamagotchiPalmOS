@@ -136,7 +136,7 @@ static inline void hal_set_lcd_icon(u8_t icon, bool_t val)
 
 static inline void hal_set_lcd_matrix(u8_t x, u8_t y, bool_t val)
 {
-	bool_t* pix_location = ((bool_t*)screen_bmp_data) + y * LCD_WIDTH + x;
+	bool_t* pix_location = ((bool_t*)screen_bmp_data) + (y << 5) + x;
 	*pix_location = val ? 0b11111111 : 0b0;
 }
 
