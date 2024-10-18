@@ -1468,7 +1468,7 @@ static inline void op_not_cb(u8_t arg0, u8_t arg1)
 	if (!RQ(arg0)) { SET_Z(); } else { CLEAR_Z(); }
 }
 
-/* The E0C6S46 supported instructions */
+/* The E0C6S46 supported instructions: reordered by most-frequently called function to least (see opcode sorter C# script in repo) */
 static const op_t ops[] = {
 	{"ADD  R(#0x%02X) #0x%02X   ", 0xC00, MASK_6B , 4, 0x030, 7 , &op_add_r_i_cb}, // ADD_R_I
 	{"JP   NZ #0x%02X         "  , 0x700, MASK_4B , 0, 0    , 5 , &op_jp_nz_cb}, // JP_NZ

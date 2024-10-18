@@ -195,7 +195,7 @@ static inline int hal_handler(void)
 	
 	EvtGetEvent(&event, evtNoWait);
 	
-	if (event.eType == nilEvent)
+	if (event.eType == nilEvent || event.eType == sysNotifySleepRequestEvent)
 	{
 		return 0;
 	}
